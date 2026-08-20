@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scrum Wire &mdash; Rugby Transfer News</title>
+<meta name="description" content="Daily rugby transfer rumours and confirmed moves. Wales, Premiership and the world's pro leagues, filtered and clean.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:      #10231b;
+    --paper:    #f3efe4;
+    --card:     #ffffff;
+    --line:     #d8d2c0;
+    --pitch:    #1f5c3d;   /* deep pitch green */
+    --pitch-2:  #2e7d52;
+    --chalk:    #e9b949;   /* touchline yellow */
+    --muted:    #5c6b62;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Atkinson Hyperlegible", system-ui, sans-serif;
+    font-size: 18px;
+    line-height: 1.65;
+    letter-spacing: 0.01em;
+  }
+  a { color: var(--pitch); }
+
+  /* ---- Header ---- */
+  header {
+    background: var(--pitch);
+    color: #fff;
+    padding: 28px 20px 24px;
+    border-bottom: 6px solid var(--chalk);
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  .brand {
+    font-family: "Bricolage Grotesque", system-ui, sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 7vw, 3rem);
+    line-height: 1.02;
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+  .brand .ball { color: var(--chalk); }
+  .tagline {
+    margin: 8px 0 0;
+    font-size: 1rem;
+    color: #cfe6da;
+    max-width: 46ch;
+  }
+  .updated {
+    margin-top: 16px;
+    font-size: 0.85rem;
+    color: #b9d8c8;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--chalk); display: inline-block; }
+
+  /* ---- Feed ---- */
+  main { padding: 22px 16px 60px; }
+  .count {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin: 4px 0 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px 18px 16px;
+    margin-bottom: 16px;
+  }
+  .meta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .pill {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 999px;
+    letter-spacing: 0.03em;
+  }
+  .pill.league { background: var(--pitch); color: #fff; }
+  .pill.source { background: #eee7d5; color: var(--muted); }
+  .date { font-size: 0.78rem; color: var(--muted); margin-left: auto; }
+  .card h2 {
+    font-family: "Bricolage Grotesque", system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 1.28rem;
+    line-height: 1.22;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .card h2 a { color: var(--ink); text-decoration: none; }
+  .card h2 a:hover, .card h2 a:focus { color: var(--pitch); text-decoration: underline; }
+  .summary { margin: 0 0 12px; color: #26362d; }
+  .readmore {
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+    color: var(--pitch-2);
+  }
+  .readmore:hover, .readmore:focus { text-decoration: underline; }
+  .empty { text-align: center; color: var(--muted); padding: 40px 0; }
+
+  footer {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 16px 40px;
+    color: var(--muted);
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+  footer a { color: var(--pitch-2); }
+
+  :focus-visible { outline: 3px solid var(--chalk); outline-offset: 2px; border-radius: 4px; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .card { transition: transform .15s ease, box-shadow .15s ease; }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16,35,27,.08); }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1 class="brand">Scrum Wire <span class="ball">&#127945;</span></h1>
+      <p class="tagline">Daily rugby transfer rumours and confirmed moves. Wales &amp; the Premiership first, the world's pro leagues right behind. Filtered, trimmed, easy to read.</p>
+      <div class="updated"><span class="dot"></span> Updated Thursday 20 August 2026, 14:29 UTC</div>
+    </div>
+  </header>
+  <main class="wrap">
+    <p class="count">60 stories</p>
+    
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">South Africa</span>
+            <span class="pill source">RugbyPass</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.rugbypass.com/news/we-could-have-selected-him-rassie-erasmus-explains-siya-kolisi-decision-springboks-all-blacks/" target="_blank" rel="noopener">&#x27;We could have selected him&#x27;: Erasmus explains Siya Kolisi decision</a></h2>
+          <p class="summary">South Africa head coach Rassie Erasmus has revealed that captain Siya Kolisi was available to face the All Blacks this weekend at Ellis Park in the first match of the Greatest Rivalry series, but the coaching team opted against selecting him.</p>
+          <a class="readmore" href="https://www.rugbypass.com/news/we-could-have-selected-him-rassie-erasmus-explains-siya-kolisi-decision-springboks-all-blacks/" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            
+            <span class="pill source">Sky Sports – Rugby Union</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/football/news/12040/13575044/myles-lewis-skelly-transfer-news-mikel-arteta-100-per-cent-confident-arsenal-will-keep-teenage-midfielder-this-summer" target="_blank" rel="noopener">&#x27;100 per cent&#x27; - Arteta confident Lewis-Skelly stays at Arsenal</a></h2>
+          <p class="summary">Mikel Arteta says he is &quot;100 per cent&quot; confident Myles Lewis-Skelly will be an Arsenal player at the end of the transfer window.</p>
+          <a class="readmore" href="https://www.skysports.com/football/news/12040/13575044/myles-lewis-skelly-transfer-news-mikel-arteta-100-per-cent-confident-arsenal-will-keep-teenage-midfielder-this-summer" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            
+            <span class="pill source">Sky Sports – Rugby Union</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/f1/news/12040/13574972/max-verstappen-george-russell-says-his-mercedes-seat-never-felt-under-threat-from-red-bull-driver-before-contract-announcement" target="_blank" rel="noopener">Russell: My Mercedes seat never felt under threat from Verstappen</a></h2>
+          <p class="summary">George Russell says his Mercedes seat &quot;never felt under threat&quot; from Max Verstappen before the Dutchman ended speculation over his future by signing a contract extension with Red Bull.</p>
+          <a class="readmore" href="https://www.skysports.com/f1/news/12040/13574972/max-verstappen-george-russell-says-his-mercedes-seat-never-felt-under-threat-from-red-bull-driver-before-contract-announcement" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Premiership</span>
+            <span class="pill source">RugbyPass</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.rugbypass.com/news/exeter-chiefs-delighted-as-familiar-face-confirmed-as-new-head-coach/" target="_blank" rel="noopener">Exeter Chiefs &#x27;delighted&#x27; as familiar face confirmed as new head coach</a></h2>
+          <p class="summary">Exeter Chiefs have promoted Oli Bishop to the role of head coach prior to the 2026/27 JAECOO Premiership Women&#x27;s Rugby campaign.</p>
+          <a class="readmore" href="https://www.rugbypass.com/news/exeter-chiefs-delighted-as-familiar-face-confirmed-as-new-head-coach/" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Premiership</span>
+            <span class="pill source">BBC Sport – Rugby Union</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/rugby-union/articles/c05q44de4lzo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Exeter Chiefs women promote Bishop to head coach role</a></h2>
+          <p class="summary">Premiership Women&#x27;s Rugby side Exeter Chiefs appoint assistant Oli Bishop as head coach to replace Steve Salvin.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/rugby-union/articles/c05q44de4lzo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            
+            <span class="pill source">Sky Sports – Rugby Union</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/football/news/12040/13574814/premier-league-managers-2026-27-record-new-bosses-manager-changes-and-tenure" target="_blank" rel="noopener">Premier League reset: Record manager upheaval leaves 2026/27 wide open</a></h2>
+          <p class="summary">There&#x27;s a sense of unpredictability surrounding the new Premier League campaign.</p>
+          <a class="readmore" href="https://www.skysports.com/football/news/12040/13574814/premier-league-managers-2026-27-record-new-bosses-manager-changes-and-tenure" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">South Africa</span>
+            <span class="pill source">RugbyPass</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.rugbypass.com/news/dave-rennie-responds-to-felix-jones/" target="_blank" rel="noopener">Dave Rennie responds to Felix Jones&#x27; issues with All Blacks</a></h2>
+          <p class="summary">All Blacks head coach Dave Rennie has dismissed claims that there are illegal &quot;themes&quot; present in his team&#x27;s game, painting the instances Springboks defence coach Felix Jones identified at a press conference this week as one-offs.</p>
+          <a class="readmore" href="https://www.rugbypass.com/news/dave-rennie-responds-to-felix-jones/" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            
+            <span class="pill source">RugbyPass</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.rugbypass.com/news/irfu-complete-provincial-talent-coaches-with-trio-of-appointments/" target="_blank" rel="noopener">IRFU complete Provincial Talent Coaches with trio of appointments</a></h2>
+          <p class="summary">The Irish Rugby Football Union have completed their panel of Provincial Talent Coaches within the union&#x27;s Women&#x27;s National Team Squad programme.</p>
+          <a class="readmore" href="https://www.rugbypass.com/news/irfu-complete-provincial-talent-coaches-with-trio-of-appointments/" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">South Africa</span>
+            <span class="pill source">RugbyPass</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.rugbypass.com/news/rassie-erasmus-names-springboks-team-to-face-all-blacks-with-one-surprise-omission-thomas-du-toit/" target="_blank" rel="noopener">Rassie Erasmus names Bok team to face All Blacks with one surprise omission</a></h2>
+          <p class="summary">South Africa head coach Rassie Erasmus has named his squad to face the All Blacks on Saturday at Ellis Park in the first match of their Greatest Rivalry series.</p>
+          <a class="readmore" href="https://www.rugbypass.com/news/rassie-erasmus-names-springboks-team-to-face-all-blacks-with-one-surprise-omission-thomas-du-toit/" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            
+            <span class="pill source">Sky Sports – Rugby Union</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/f1/news/12040/13574965/max-verstappen-red-bull-driver-says-he-was-closer-to-retiring-than-switching-f1-teams-before-contract-extended" target="_blank" rel="noopener">Verstappen was &#x27;closer to retiring&#x27; than joining Red Bull rival</a></h2>
+          <p class="summary">Max Verstappen said he came closer to retiring from Formula 1 than joining a rival team as he explained his reasons for extending his Red Bull contract.</p>
+          <a class="readmore" href="https://www.skysports.com/f1/news/12040/13574965/max-verstappen-red-bull-driver-says-he-was-closer-to-retiring-than-switching-f1-teams-before-contract-extended" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            
+            <span class="pill source">RugbyPass</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.rugbypass.com/news/ex-england-u20-back-row-kofi-cripps-leaves-bristol-bears-to-reunite-with-former-coach-worcester-warriors-gallagher-prem-champ-rugby/" target="_blank" rel="noopener">Ex-England U20 back-row Kofi Cripps leaves Bristol to reunite with former coach</a></h2>
+          <p class="summary">Champ Rugby champions Worcester Warriors have signed former England U20 back-row Kofi Cripps from Bristol Bears ahead of the new season.</p>
+          <a class="readmore" href="https://www.rugbypass.com/news/ex-england-u20-back-row-kofi-cripps-leaves-bristol-bears-to-reunite-with-former-coach-worcester-warriors-gallagher-prem-champ-rugby/" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            
+            <span class="pill source">RugbyPass</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.rugbypass.com/news/sana-govender-to-mesh-all-that-together-is-a-challenge/" target="_blank" rel="noopener">Sana Govender: The Leinster head coach who came by way of Gdansk and Skibbereen</a></h2>
+          <p class="summary">When Erin King and Eve Higgins lined out against Munster, earlier this month, it was for the first time as a members of Leinster’s senior squad.</p>
+          <a class="readmore" href="https://www.rugbypass.com/news/sana-govender-to-mesh-all-that-together-is-a-challenge/" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            
+            <span class="pill source">Sky Sports – Rugby Union</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/f1/live-blog/12040/12466779/f1-news-rumours-and-gossip-formula-1-latest-updates-on-teams-driver-transfer-market-and-contracts" target="_blank" rel="noopener">Your say on Verstappen extending Red Bull contract</a></h2>
+          
+          <a class="readmore" href="https://www.skysports.com/f1/live-blog/12040/12466779/f1-news-rumours-and-gossip-formula-1-latest-updates-on-teams-driver-transfer-market-and-contracts" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            
+            <span class="pill source">RugbyPass</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.rugbypass.com/news/match-official-appointments-locked-in-for-wxv-global-series-and-challenger/" target="_blank" rel="noopener">Match official appointments locked in for WXV Global Series and Challenger</a></h2>
+          <p class="summary">French referee Aurélie Groizeleau will become the fourth female to referee 50 Test matches during the WXV Global Series.</p>
+          <a class="readmore" href="https://www.rugbypass.com/news/match-official-appointments-locked-in-for-wxv-global-series-and-challenger/" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Wales</span>
+            <span class="pill source">RugbyPass</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.rugbypass.com/news/leicester-coach-alex-davies-leaves-club-with-immediate-effect-for-test-role-wales-rugby/" target="_blank" rel="noopener">Leicester coach Alex Davies leaves club with immediate effect for Test role</a></h2>
+          <p class="summary">Wales have appointed Leicester Tigers assistant coach Alex Davies as a full-time kicking specialist in Steve Tandy’s backroom team, with the former Bath fly-half set to take up the role on September 1.</p>
+          <a class="readmore" href="https://www.rugbypass.com/news/leicester-coach-alex-davies-leaves-club-with-immediate-effect-for-test-role-wales-rugby/" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Wales</span>
+            <span class="pill source">BBC Sport – Welsh Rugby</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/rugby-union/articles/cn4ne55n8zpo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Wales appoint Leicester&#x27;s Davies as kicking coach</a></h2>
+          <p class="summary">Alex Davies joins Steve Tandy&#x27;s Wales management team as kicking coach after leaving Leicester.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/rugby-union/articles/cn4ne55n8zpo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Wales</span>
+            <span class="pill source">WalesOnline Rugby</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.walesonline.co.uk/sport/rugby/rugby-news/wales-announce-new-coach-steve-34487890" target="_blank" rel="noopener">Wales announce new coach as Steve Tandy receives boost</a></h2>
+          <p class="summary">The 40-year-old Leicester coach is the fourth coaching appointment this year by Wales</p>
+          <a class="readmore" href="https://www.walesonline.co.uk/sport/rugby/rugby-news/wales-announce-new-coach-steve-34487890" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            
+            <span class="pill source">Sky Sports – Rugby Union</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/watch/video/13574929/formula-one-red-bull-announce-max-verstappens-re-signing-with-hilarious-social-media-video" target="_blank" rel="noopener">Verstappen&#x27;s hilarious contract announcement video!</a></h2>
+          <p class="summary">Max Verstappen played the part of the grammar police in Red Bull&#x27;s hilarious video announcing his new contract.</p>
+          <a class="readmore" href="https://www.skysports.com/watch/video/13574929/formula-one-red-bull-announce-max-verstappens-re-signing-with-hilarious-social-media-video" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            
+            <span class="pill source">Sky Sports – Rugby Union</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/football/news/12040/13569345/free-stream-the-transfer-show-on-sky-sports-news-latest-football-transfer-news-updates-and-rumours" target="_blank" rel="noopener">FREE STREAM: Good Morning Transfers on Sky Sports News</a></h2>
+          
+          <a class="readmore" href="https://www.skysports.com/football/news/12040/13569345/free-stream-the-transfer-show-on-sky-sports-news-latest-football-transfer-news-updates-and-rumours" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            
+            <span class="pill source">Sky Sports – Rugby Union</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/football/news/12040/13574174/curtis-jones-transfer-news-inter-milan-agree-30m-deal-to-sign-liverpool-midfielder" target="_blank" rel="noopener">Inter Milan agree £30m deal for Liverpool&#x27;s Jones</a></h2>
+          <p class="summary">Inter Milan have agreed a £30m (€35m) deal with Liverpool for Curtis Jones.</p>
+          <a class="readmore" href="https://www.skysports.com/football/news/12040/13574174/curtis-jones-transfer-news-inter-milan-agree-30m-deal-to-sign-liverpool-midfielder" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            
+            <span class="pill source">Sky Sports – Rugby Union</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/f1/news/12040/13574907/max-verstappen-red-bull-driver-signs-new-contract-extension-until-2030-formula-1-season-ahead-of-dutch-grand-prix" target="_blank" rel="noopener">Verstappen signs new Red Bull contract</a></h2>
+          <p class="summary">Max Verstappen has signed a new long-term Red Bull contract until 2030 to end speculation over his future.</p>
+          <a class="readmore" href="https://www.skysports.com/f1/news/12040/13574907/max-verstappen-red-bull-driver-signs-new-contract-extension-until-2030-formula-1-season-ahead-of-dutch-grand-prix" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">South Africa</span>
+            <span class="pill source">WalesOnline Rugby</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.walesonline.co.uk/sport/rugby/rugby-news/former-wru-boss-backed-return-34486463" target="_blank" rel="noopener">Former WRU boss backed for return and Springboks reach agreement with New Zealand</a></h2>
+          <p class="summary">The latest rugby news headlines from Wales and beyond today</p>
+          <a class="readmore" href="https://www.walesonline.co.uk/sport/rugby/rugby-news/former-wru-boss-backed-return-34486463" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Wales</span>
+            <span class="pill source">WalesOnline Rugby</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.walesonline.co.uk/sport/rugby/rugby-news/five-welsh-qualified-rugby-league-34485947" target="_blank" rel="noopener">Five Welsh-qualified rugby league stars identified as WRU targets new recruits</a></h2>
+          <p class="summary">Steve Tandy could do worse than look to the 13-man code for future Wales internationals</p>
+          <a class="readmore" href="https://www.walesonline.co.uk/sport/rugby/rugby-news/five-welsh-qualified-rugby-league-34485947" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            
+            <span class="pill source">Sky Sports – Rugby Union</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/football/live-blog/12040/13025491/aston-villa-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts" target="_blank" rel="noopener">Aston Villa latest: More players sold?! Transfer plans analysed...</a></h2>
+          
+          <a class="readmore" href="https://www.skysports.com/football/live-blog/12040/13025491/aston-villa-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Wales</span>
+            <span class="pill source">BBC Sport – Welsh Rugby</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/rugby-union/articles/c3ekl5w5z9wo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Cardiff sign Leicester lock Manz on loan</a></h2>
+          <p class="summary">Cardiff strengthen pack ahead of 2026-27 season by signing Leicester lock Tom Manz on loan.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/rugby-union/articles/c3ekl5w5z9wo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Wales</span>
+            <span class="pill source">WalesOnline Rugby</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.walesonline.co.uk/sport/rugby/rugby-news/cardiff-announce-signing-6ft-8in-34482967" target="_blank" rel="noopener">Cardiff announce signing of 6ft 8in England giant</a></h2>
+          <p class="summary">The 25-year-old linked up with Corniel van Zyl&#x27;s side earlier this week</p>
+          <a class="readmore" href="https://www.walesonline.co.uk/sport/rugby/rugby-news/cardiff-announce-signing-6ft-8in-34482967" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">South Africa</span>
+            <span class="pill source">RugbyPass</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.rugbypass.com/news/all-blacks-great-john-kirwan-accuses-rassie-erasmus-of-conspiracy-springboks/" target="_blank" rel="noopener">All Blacks great accuses Rassie Erasmus of &#x27;conspiracy&#x27;</a></h2>
+          <p class="summary">Former All Blacks wing John Kirwan has suggested that South Africa head coach Rassie Erasmus instructed the provincial sides to &quot;not play like the Springboks&quot; against the All Blacks in order to &quot;lull them into a false sense of security&quot; ahead of the Test serie…</p>
+          <a class="readmore" href="https://www.rugbypass.com/news/all-blacks-great-john-kirwan-accuses-rassie-erasmus-of-conspiracy-springboks/" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">South Africa</span>
+            <span class="pill source">RugbyPass</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.rugbypass.com/news/malcolm-marx-thats-in-the-past-and-weve-got-to-deal-with-what-is-now-in-front-of-us-springboks-all-blacks/" target="_blank" rel="noopener">Malcolm Marx: &#x27;That’s in the past and we&#x27;ve got to deal with what is now in front of us&#x27;</a></h2>
+          <p class="summary">Reigning World Rugby player of the year Malcolm Marx has downplayed the significance of South Africa&#x27;s record win over the All Blacks last year ahead of this weekend&#x27;s clash at Ellis Park.</p>
+          <a class="readmore" href="https://www.rugbypass.com/news/malcolm-marx-thats-in-the-past-and-weve-got-to-deal-with-what-is-now-in-front-of-us-springboks-all-blacks/" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">New Zealand</span>
+            <span class="pill source">BBC Sport – Rugby Union</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/rugby-union/articles/cd69dj304wxo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">New Zealand great Tui joins Trailfinders</a></h2>
+          <p class="summary">World Cup-winning New Zealand international Ruby Tui, 34, signs a one-year deal with Trailfinders Women.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/rugby-union/articles/cd69dj304wxo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Premiership</span>
+            <span class="pill source">RugbyPass</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.rugbypass.com/news/ruby-tuis-club-future-revealed-after-fortnight-of-social-media-clues/" target="_blank" rel="noopener">Ruby Tui’s club future revealed after fortnight of social media clues</a></h2>
+          <p class="summary">Speculation around Ruby Tui&#x27;s club future has been put to rest after she signed for JAECOO Premiership Women&#x27;s Rugby runners-up Trailfinders Women.</p>
+          <a class="readmore" href="https://www.rugbypass.com/news/ruby-tuis-club-future-revealed-after-fortnight-of-social-media-clues/" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">New Zealand</span>
+            <span class="pill source">RugbyPass</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.rugbypass.com/news/michael-cheika-returns-to-waratahs-more-than-a-decade-after-title-triumph/" target="_blank" rel="noopener">Michael Cheika returns to Waratahs more than a decade after title triumph</a></h2>
+          <p class="summary">Michael Cheika has been unveiled as the NSW Waratahs head coach ahead of the 2027 Super Rugby Pacific season.</p>
+          <a class="readmore" href="https://www.rugbypass.com/news/michael-cheika-returns-to-waratahs-more-than-a-decade-after-title-triumph/" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">New Zealand</span>
+            <span class="pill source">RugbyPass</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.rugbypass.com/news/western-force-sign-dominant-ball-runner-to-fill-vital-physical-void/" target="_blank" rel="noopener">Western Force sign ‘dominant’ ball-runner to fill vital physical void</a></h2>
+          <p class="summary">Former Crusaders U20s Academy prospect Netani Baleisomosomo has earned an opportunity in Super Rugby Pacific with the Western Force.</p>
+          <a class="readmore" href="https://www.rugbypass.com/news/western-force-sign-dominant-ball-runner-to-fill-vital-physical-void/" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Champions Cup</span>
+            <span class="pill source">RugbyPass</span>
+            <span class="date">Tue 18 Aug</span>
+          </div>
+          <h2><a href="https://www.rugbypass.com/news/australian-born-usa-eagles-prop-seals-france-move-as-medical-joker/" target="_blank" rel="noopener">Australian-born USA Eagles prop seals France move as medical joker</a></h2>
+          <p class="summary">USA Eagles prop Charlie Abel has sealed a return to European rugby 10 years after first playing in France, signing with Pro D2 outfit Oyonnax Rugby.</p>
+          <a class="readmore" href="https://www.rugbypass.com/news/australian-born-usa-eagles-prop-seals-france-move-as-medical-joker/" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">New Zealand</span>
+            <span class="pill source">RugbyPass</span>
+            <span class="date">Tue 18 Aug</span>
+          </div>
+          <h2><a href="https://www.rugbypass.com/news/dave-rennie-reveals-rassie-erasmus-turned-down-pre-match-meeting-with-officials/" target="_blank" rel="noopener">Dave Rennie reveals Rassie Erasmus turned down pre-match meeting with officials</a></h2>
+          <p class="summary">All Blacks head coach Dave Rennie revealed that the coaches will not be having any pre-match meetings with the match officials after Rassie Erasmus declined.</p>
+          <a class="readmore" href="https://www.rugbypass.com/news/dave-rennie-reveals-rassie-erasmus-turned-down-pre-match-meeting-with-officials/" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">New Zealand</span>
+            <span class="pill source">Google News – All Blacks transfers</span>
+            <span class="date">Tue 18 Aug</span>
+          </div>
+          <h2><a href="https://news.google.com/rss/articles/CBMi8AFBVV95cUxPeGhWdFFITWdxQzdhaS1fdUEzU0NvLTFYS0lLaTYwTU95M3AxM3hfTGoxd3AtOTRMMHhwNVlpT2lhVFF6dEJVbjA2LXRLT1l0S2JHVXR5cmlXaTNyNW1Maml4VDBrZU01OHg5bmdobXBITGtiZ01NblUyaWJnWVA5UDU2Y1hYSzU0Q0l5RFgtRG1ONW9aN2pBa1MxMFgyd2k2ZnR6RmRvNU54bDVQM0VSa1EybTN5NWNpMEZyREtoRXhlYVBDOWo5akpWbF9mX2NQOU42SEYtaFdNa3dSYTE5el9DLUN5UWw2TXpKVnppTG8?oc=5" target="_blank" rel="noopener">Rugby Transfers: Fijian duo make Super Rugby moves - Planet Rugby</a></h2>
+          <p class="summary">Rugby Transfers: Fijian duo make Super Rugby moves Planet Rugby</p>
+          <a class="readmore" href="https://news.google.com/rss/articles/CBMi8AFBVV95cUxPeGhWdFFITWdxQzdhaS1fdUEzU0NvLTFYS0lLaTYwTU95M3AxM3hfTGoxd3AtOTRMMHhwNVlpT2lhVFF6dEJVbjA2LXRLT1l0S2JHVXR5cmlXaTNyNW1Maml4VDBrZU01OHg5bmdobXBITGtiZ01NblUyaWJnWVA5UDU2Y1hYSzU0Q0l5RFgtRG1ONW9aN2pBa1MxMFgyd2k2ZnR6RmRvNU54bDVQM0VSa1EybTN5NWNpMEZyREtoRXhlYVBDOWo5akpWbF9mX2NQOU42SEYtaFdNa3dSYTE5el9DLUN5UWw2TXpKVnppTG8?oc=5" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">New Zealand</span>
+            <span class="pill source">RugbyPass</span>
+            <span class="date">Tue 18 Aug</span>
+          </div>
+          <h2><a href="https://www.rugbypass.com/news/maisy-allen-steps-out-of-comfort-zone-with-short-term-move/" target="_blank" rel="noopener">Maisy Allen steps out of &#x27;comfort zone&#x27; with short-term move</a></h2>
+          <p class="summary">Exeter Chiefs vice-captain Maisy Allen will join Canterbury for the upcoming Farah Palmer Cup campaign in New Zealand.</p>
+          <a class="readmore" href="https://www.rugbypass.com/news/maisy-allen-steps-out-of-comfort-zone-with-short-term-move/" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">URC</span>
+            <span class="pill source">WalesOnline Rugby</span>
+            <span class="date">Tue 18 Aug</span>
+          </div>
+          <h2><a href="https://www.walesonline.co.uk/sport/rugby/rugby-news/wales-must-find-way-quit-34478134" target="_blank" rel="noopener">Wales must find a way to quit the URC and join England above all else</a></h2>
+          <p class="summary">The Welsh Rugby Union must make securing a place in England&#x27;s revamped structure its top priority amid all the current controversy</p>
+          <a class="readmore" href="https://www.walesonline.co.uk/sport/rugby/rugby-news/wales-must-find-way-quit-34478134" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">URC</span>
+            <span class="pill source">Google News – URC transfers</span>
+            <span class="date">Tue 18 Aug</span>
+          </div>
+          <h2><a href="https://news.google.com/rss/articles/CBMingFBVV95cUxQYkRWWlNRaGduQzFybnFyMFI3cnpadF9PUDZEd1dMX25rMU1jSDl0aDdHNjQ2LTJXV2RLUHZYWGdRaEhxaE1mN2dWV1lhUEp3VW5rQi05YnF1V0thd0VTWlNvb1NrSUpfb2hUYnZHZ2diT3NVbjZiY2RzVEtObGlJU0hGRVRwTThWZG5rcUtFcUdSZmo4eVJaSzhVSGZhUQ?oc=5" target="_blank" rel="noopener">Rugby transfer rumours and news: Bristol Bears forward in demand, Exeter Chiefs flanker makes URC move - Bristol Live</a></h2>
+          <p class="summary">Rugby transfer rumours and news: Bristol Bears forward in demand, Exeter Chiefs flanker makes URC move Bristol Live</p>
+          <a class="readmore" href="https://news.google.com/rss/articles/CBMingFBVV95cUxQYkRWWlNRaGduQzFybnFyMFI3cnpadF9PUDZEd1dMX25rMU1jSDl0aDdHNjQ2LTJXV2RLUHZYWGdRaEhxaE1mN2dWV1lhUEp3VW5rQi05YnF1V0thd0VTWlNvb1NrSUpfb2hUYnZHZ2diT3NVbjZiY2RzVEtObGlJU0hGRVRwTThWZG5rcUtFcUdSZmo4eVJaSzhVSGZhUQ?oc=5" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Wales</span>
+            <span class="pill source">BBC Sport – Welsh Rugby</span>
+            <span class="date">Tue 18 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/rugby-union/articles/c20eygrlklzo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Neumann uncertain over future after Quins exit</a></h2>
+          <p class="summary">Wales wing Lisa Neumann says she is considering her options after leaving Harlequins this summer.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/rugby-union/articles/c20eygrlklzo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Wales</span>
+            <span class="pill source">Google News – All Blacks transfers</span>
+            <span class="date">Tue 18 Aug</span>
+          </div>
+          <h2><a href="https://news.google.com/rss/articles/CBMiwwFBVV95cUxOU1Fvd2NvVU5OWWNUcXJ3S3RsajZ4bGxFQi1ZRE9CZ0hyU2lvOVVNckl2eHlYOEdMVXpNZi1QVHcxZTRhalpuNUZRODh2YlpXbHV1cGc2OFE4LV9XZnJFLTJxa1YzcTBGUC1Uc0ZmLTlnaGl4LXRYNjdiV2d5OUdleDhUZFgyS056elAyeHBOZUN4Szd5OFY3bXJUYXVJd19lSEhDbXliMElsU2E4djFVRzh4TTltczgtTEV0QllKR2JwMkk?oc=5" target="_blank" rel="noopener">Rugby Transfers: Wales star makes decision on future as Newcastle Red Bulls tie down prospect - Planet Rugby</a></h2>
+          <p class="summary">Rugby Transfers: Wales star makes decision on future as Newcastle Red Bulls tie down prospect Planet Rugby</p>
+          <a class="readmore" href="https://news.google.com/rss/articles/CBMiwwFBVV95cUxOU1Fvd2NvVU5OWWNUcXJ3S3RsajZ4bGxFQi1ZRE9CZ0hyU2lvOVVNckl2eHlYOEdMVXpNZi1QVHcxZTRhalpuNUZRODh2YlpXbHV1cGc2OFE4LV9XZnJFLTJxa1YzcTBGUC1Uc0ZmLTlnaGl4LXRYNjdiV2d5OUdleDhUZFgyS056elAyeHBOZUN4Szd5OFY3bXJUYXVJd19lSEhDbXliMElsU2E4djFVRzh4TTltczgtTEV0QllKR2JwMkk?oc=5" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Wales</span>
+            <span class="pill source">WalesOnline Rugby</span>
+            <span class="date">Tue 18 Aug</span>
+          </div>
+          <h2><a href="https://www.walesonline.co.uk/sport/rugby/rugby-news/five-wales-stars-join-major-34475262" target="_blank" rel="noopener">Five Wales stars join major new academy plan as WRU rejects partnership</a></h2>
+          <p class="summary">A brand new academy system is set to be formed and a host of former Wales internationals have attached themselves to the project</p>
+          <a class="readmore" href="https://www.walesonline.co.uk/sport/rugby/rugby-news/five-wales-stars-join-major-34475262" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Top 14</span>
+            <span class="pill source">Google News – Top 14 transfers</span>
+            <span class="date">Tue 18 Aug</span>
+          </div>
+          <h2><a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxPeXV4bU5rcF9kemlvY2JjUkgzSzFKRUdmblRIS0MtSUlyeWpiTEVJLXd0enBwUWNoNG9hM1hvQVpld1YySUlsN1JRbk5sX05PdWoxY0VRYzdlaFF6X2s3RTBfRXJCd2w0ZERSZTNkdmRLbFZlWVpuOE1mQmFrak9ldXRCS3JvZy00Um9Ib2IwYjZqa19sS0huazA3dWxZWTYtczBONHVWYnF3eUVodVBpY25zR0hsUQ?oc=5" target="_blank" rel="noopener">Top 14 transfer shake-up as Toulouse land Menoncello and Perpignan sign All Blacks duo - Lente Desportiva</a></h2>
+          <p class="summary">Top 14 transfer shake-up as Toulouse land Menoncello and Perpignan sign All Blacks duo Lente Desportiva</p>
+          <a class="readmore" href="https://news.google.com/rss/articles/CBMitgFBVV95cUxPeXV4bU5rcF9kemlvY2JjUkgzSzFKRUdmblRIS0MtSUlyeWpiTEVJLXd0enBwUWNoNG9hM1hvQVpld1YySUlsN1JRbk5sX05PdWoxY0VRYzdlaFF6X2s3RTBfRXJCd2w0ZERSZTNkdmRLbFZlWVpuOE1mQmFrak9ldXRCS3JvZy00Um9Ib2IwYjZqa19sS0huazA3dWxZWTYtczBONHVWYnF3eUVodVBpY25zR0hsUQ?oc=5" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">South Africa</span>
+            <span class="pill source">WalesOnline Rugby</span>
+            <span class="date">Tue 18 Aug</span>
+          </div>
+          <h2><a href="https://www.walesonline.co.uk/sport/rugby/rugby-news/welsh-club-target-giant-overseas-34473595" target="_blank" rel="noopener">Welsh club target giant overseas signing and Springboks fire back at All Blacks</a></h2>
+          <p class="summary">The latest rugby stories making headlines on Tuesday, August 18.</p>
+          <a class="readmore" href="https://www.walesonline.co.uk/sport/rugby/rugby-news/welsh-club-target-giant-overseas-34473595" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">New Zealand</span>
+            <span class="pill source">Google News – Wallabies transfers</span>
+            <span class="date">Mon 17 Aug</span>
+          </div>
+          <h2><a href="https://news.google.com/rss/articles/CBMiqAJBVV95cUxPQUVIeXczdUxOQjk0QlNhN1gySnpmM3N0WWhjOENrREY2M3NsMWJnYWdiM2UwdXB6T2RydUlyY1AzNXVoeEJXRzZ5a21nRWtBSHlZelk2M3JNdk4zSDNDRGNxZGpuVEtlQVhtRkZnNjFKN0lBdURJbVVCZUo5cVpUZzljNEozUTZiUkl6aDJVTWpFdzNkdnZkb0xDTWtYazRFT2tNSlhYRUJKR3NZcXFldktPRjlZTFEtY3kteUtIN1BoamU3MU1xdzBKOUxxbThzNktpc0cyTC1yQ29Ic1NrcVMxV21ZMFY3NE42OFZ1dXMwWlBMLTlmRGY2QXZISWZfQV9MbTFtWU9GNTdpazZKZjNkcWxyMG5vSW5UOGRGS292SmdFRXdySA?oc=5" target="_blank" rel="noopener">Rugby Transfers: Fijian duo make Super Rugby moves and Wallabies prospect&#x27;s first words on rugby union commitment amid NRL links - Rugby Addict</a></h2>
+          <p class="summary">Rugby Transfers: Fijian duo make Super Rugby moves and Wallabies prospect&#x27;s first words on rugby union commitment amid NRL links Rugby Addict</p>
+          <a class="readmore" href="https://news.google.com/rss/articles/CBMiqAJBVV95cUxPQUVIeXczdUxOQjk0QlNhN1gySnpmM3N0WWhjOENrREY2M3NsMWJnYWdiM2UwdXB6T2RydUlyY1AzNXVoeEJXRzZ5a21nRWtBSHlZelk2M3JNdk4zSDNDRGNxZGpuVEtlQVhtRkZnNjFKN0lBdURJbVVCZUo5cVpUZzljNEozUTZiUkl6aDJVTWpFdzNkdnZkb0xDTWtYazRFT2tNSlhYRUJKR3NZcXFldktPRjlZTFEtY3kteUtIN1BoamU3MU1xdzBKOUxxbThzNktpc0cyTC1yQ29Ic1NrcVMxV21ZMFY3NE42OFZ1dXMwWlBMLTlmRGY2QXZISWZfQV9MbTFtWU9GNTdpazZKZjNkcWxyMG5vSW5UOGRGS292SmdFRXdySA?oc=5" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Wales</span>
+            <span class="pill source">WalesOnline Rugby</span>
+            <span class="date">Mon 17 Aug</span>
+          </div>
+          <h2><a href="https://www.walesonline.co.uk/sport/rugby/rugby-news/jiffy-open-joining-new-wru-34471071" target="_blank" rel="noopener">Jiffy open to joining new WRU board as he calls for Welsh Government to intervene</a></h2>
+          <p class="summary">Jonathan Davies called for the current Welsh Rugby Union board to step down last week</p>
+          <a class="readmore" href="https://www.walesonline.co.uk/sport/rugby/rugby-news/jiffy-open-joining-new-wru-34471071" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">South Africa</span>
+            <span class="pill source">BBC Sport – Rugby Union</span>
+            <span class="date">Mon 17 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/rugby-union/articles/c2dkz3k94dlo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Is All Blacks&#x27; tour of South Africa a new chapter for rugby union?</a></h2>
+          <p class="summary">Is New Zealand&#x27;s &#x27;Greatest Rivalry&#x27; tour of world champions South Africa a signpost to the future of rugby union?</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/rugby-union/articles/c2dkz3k94dlo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Wales</span>
+            <span class="pill source">WalesOnline Rugby</span>
+            <span class="date">Mon 17 Aug</span>
+          </div>
+          <h2><a href="https://www.walesonline.co.uk/sport/rugby/rugby-news/wales-star-re-signs-scarlets-34470266" target="_blank" rel="noopener">Wales star re-signs with Scarlets despite uncertainty</a></h2>
+          <p class="summary">The Scarlets have succeeded in retaining another Wales international</p>
+          <a class="readmore" href="https://www.walesonline.co.uk/sport/rugby/rugby-news/wales-star-re-signs-scarlets-34470266" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Wales</span>
+            <span class="pill source">BBC Sport – Welsh Rugby</span>
+            <span class="date">Mon 17 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/rugby-union/articles/clylqd034n9o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Wales centre James signs new Scarlets contract</a></h2>
+          <p class="summary">Wales centre Eddie James signs a new contract with Scarlets before the start of the 2026-27 season.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/rugby-union/articles/clylqd034n9o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">South Africa</span>
+            <span class="pill source">WalesOnline Rugby</span>
+            <span class="date">Mon 17 Aug</span>
+          </div>
+          <h2><a href="https://www.walesonline.co.uk/sport/rugby/rugby-news/four-blacks-sent-home-south-34470069" target="_blank" rel="noopener">Four All Blacks sent home from South Africa as head coach issues warning</a></h2>
+          <p class="summary">New Zealand face the Springboks in a first blockbuster Test in Johannesburg this weekend</p>
+          <a class="readmore" href="https://www.walesonline.co.uk/sport/rugby/rugby-news/four-blacks-sent-home-south-34470069" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Australia</span>
+            <span class="pill source">SMH – Rugby Union</span>
+            <span class="date">Sun 16 Aug</span>
+          </div>
+          <h2><a href="https://www.smh.com.au/sport/rugby-union/kiss-fingerprints-quickly-appearing-on-new-look-wallabies-20260816-p60ooz.html?ref=rss&amp;utm_medium=rss&amp;utm_source=rss_sport_rugby-union" target="_blank" rel="noopener">Kiss’ fingerprints quickly appearing on new-look Wallabies</a></h2>
+          <p class="summary">Clever interplay between midfield players and some aggressive forwards are a good sign for the challenges to come in Argentina.</p>
+          <a class="readmore" href="https://www.smh.com.au/sport/rugby-union/kiss-fingerprints-quickly-appearing-on-new-look-wallabies-20260816-p60ooz.html?ref=rss&amp;utm_medium=rss&amp;utm_source=rss_sport_rugby-union" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Japan</span>
+            <span class="pill source">The Guardian – Rugby Union</span>
+            <span class="date">Sat 15 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/sport/2026/aug/15/les-kiss-australia-team-selection-rugby-union" target="_blank" rel="noopener">Les Kiss reaps rewards of derring-do approach to Australia’s team selection</a></h2>
+          <p class="summary">Issac Henry, Carlo Tizzano, Charlie Cale and Massimo de Lutiis repay faith shown by Wallabies coach and highlight squad’s strength in depth The Wallabies have problems, but they are of the good variety.</p>
+          <a class="readmore" href="https://www.theguardian.com/sport/2026/aug/15/les-kiss-australia-team-selection-rugby-union" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Wales</span>
+            <span class="pill source">BBC Sport – Welsh Rugby</span>
+            <span class="date">Sat 15 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/rugby-union/articles/cwy44131ydno?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Wales great Jones set to join Ospreys board</a></h2>
+          <p class="summary">Ospreys are set to announce former Wales captain Alun Wyn Jones as a new member of their board before the 2026-27 season.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/rugby-union/articles/cwy44131ydno?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Japan</span>
+            <span class="pill source">The Guardian – Rugby Union</span>
+            <span class="date">Sat 15 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/sport/2026/aug/15/wallabies-australia-japan-nations-championship-rugby-union-match-report" target="_blank" rel="noopener">Carter Gordon impresses on return as Wallabies surge clear of Japan for dominant win</a></h2>
+          <p class="summary">Australia beat Japan 56-17 in Townsville No 10 shows why he could be solution Les is proving more for the Wallabies, with new coach Les Kiss leading the side to a second consecutive victory in an eight-try 56-17 triumph over Japan in Townsville.</p>
+          <a class="readmore" href="https://www.theguardian.com/sport/2026/aug/15/wallabies-australia-japan-nations-championship-rugby-union-match-report" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            
+            <span class="pill source">SMH – Rugby Union</span>
+            <span class="date">Sat 15 Aug</span>
+          </div>
+          <h2><a href="https://www.smh.com.au/sport/rugby-union/wallaby-1000-scores-try-on-debut-20260815-p60on0.html?ref=rss&amp;utm_medium=rss&amp;utm_source=rss_sport_rugby-union" target="_blank" rel="noopener">Wallaby 1000 scores try on debut</a></h2>
+          <p class="summary">Wallaby No.1000 Massimo De Lutiis goes over as the home team extend their lead.</p>
+          <a class="readmore" href="https://www.smh.com.au/sport/rugby-union/wallaby-1000-scores-try-on-debut-20260815-p60on0.html?ref=rss&amp;utm_medium=rss&amp;utm_source=rss_sport_rugby-union" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Top 14</span>
+            <span class="pill source">Google News – Top 14 transfers</span>
+            <span class="date">Thu 13 Aug</span>
+          </div>
+          <h2><a href="https://news.google.com/rss/articles/CBMipwFBVV95cUxQaTVuVWJhNzN5V3VJaUNEZ2lNS0Q3Umx2eEdyd09oNGE5akRhNHRkMDdYNE1ZVjQ0ZDJqbC1HMFBlR3J3cWZVU3VrMVkzRFhDd3Rnc0ZoRlZkeVIxXzFIdHRITnc2TXVzSFlyWDRSV2JJTUtLcmtjaDRYTGRMNFdRdVpvTzNEV1F2ME83SklkUDYyTzdLZDAzTzhFVWVFcEk5ZVVHV0pyRQ?oc=5" target="_blank" rel="noopener">Arrivals and exits: A country-by-country look at the Top 14&#x27;s new signings - Rugbypass.com</a></h2>
+          <p class="summary">Arrivals and exits: A country-by-country look at the Top 14&#x27;s new signings Rugbypass.com</p>
+          <a class="readmore" href="https://news.google.com/rss/articles/CBMipwFBVV95cUxQaTVuVWJhNzN5V3VJaUNEZ2lNS0Q3Umx2eEdyd09oNGE5akRhNHRkMDdYNE1ZVjQ0ZDJqbC1HMFBlR3J3cWZVU3VrMVkzRFhDd3Rnc0ZoRlZkeVIxXzFIdHRITnc2TXVzSFlyWDRSV2JJTUtLcmtjaDRYTGRMNFdRdVpvTzNEV1F2ME83SklkUDYyTzdLZDAzTzhFVWVFcEk5ZVVHV0pyRQ?oc=5" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Japan</span>
+            <span class="pill source">The Guardian – Rugby Union</span>
+            <span class="date">Thu 13 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/sport/2026/aug/14/wallabies-australia-japan-carter-gordon-rugby-union-test-nations-championship-preview" target="_blank" rel="noopener">Wallabies search for pieces to fit playmaker puzzle as Kiss swings changes | Jack Snape</a></h2>
+          <p class="summary">Australia head coach called in Carter Gordon to face Japan in Townsville but will keep investigating his flyhalf options before next year’s World Cup May the merry-go-round continue, after Wallabies coach Les Kiss promised to keep looking through his options a…</p>
+          <a class="readmore" href="https://www.theguardian.com/sport/2026/aug/14/wallabies-australia-japan-carter-gordon-rugby-union-test-nations-championship-preview" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Premiership</span>
+            <span class="pill source">BBC Sport – Rugby Union</span>
+            <span class="date">Thu 13 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/rugby-union/articles/cjrvpv21y7wo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Prem champions Saints name Dingwall club captain</a></h2>
+          <p class="summary">Premiership champions Northampton Saints appoint Fraser Dingwall as their new club captain.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/rugby-union/articles/cjrvpv21y7wo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            
+            <span class="pill source">Google News – All Blacks transfers</span>
+            <span class="date">Thu 13 Aug</span>
+          </div>
+          <h2><a href="https://news.google.com/rss/articles/CBMi7AFBVV95cUxPODFLV3NER3c3UjYwWkFpVl9HRWVvdEVNQnFlV2RRbnEtZFVTajNCVE9BTjB1MVhjT1l0dnBuS0R1d0VnM3NNSmR5Y2lRcUJrckxubTRKZkQxZVI0YkI2VmRhTUcyS1lqY2RsS1dsaHZEY2FzMXp4SVZDZ3E4a1JMQzhKTnY0Si1XbktOS1ZBV2lWU1MyYWZTNEtFS3NkUVNMRElpMDJLYjFuQjZmU3ZIdEw3QW5mMmpaZGd6WmFfUFNmTW1FLUEwQ2VOY3VCR2o3T1IwWUJBS1UwZUZJNzhQWmVBNnc2ZHdnNmFYYg?oc=5" target="_blank" rel="noopener">Rugby Transfers: Henry Pollock linked with shock code switch - Planet Rugby</a></h2>
+          <p class="summary">Rugby Transfers: Henry Pollock linked with shock code switch Planet Rugby</p>
+          <a class="readmore" href="https://news.google.com/rss/articles/CBMi7AFBVV95cUxPODFLV3NER3c3UjYwWkFpVl9HRWVvdEVNQnFlV2RRbnEtZFVTajNCVE9BTjB1MVhjT1l0dnBuS0R1d0VnM3NNSmR5Y2lRcUJrckxubTRKZkQxZVI0YkI2VmRhTUcyS1lqY2RsS1dsaHZEY2FzMXp4SVZDZ3E4a1JMQzhKTnY0Si1XbktOS1ZBV2lWU1MyYWZTNEtFS3NkUVNMRElpMDJLYjFuQjZmU3ZIdEw3QW5mMmpaZGd6WmFfUFNmTW1FLUEwQ2VOY3VCR2o3T1IwWUJBS1UwZUZJNzhQWmVBNnc2ZHdnNmFYYg?oc=5" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">South Africa</span>
+            <span class="pill source">Google News – Springbok transfers</span>
+            <span class="date">Thu 13 Aug</span>
+          </div>
+          <h2><a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxPeDBHZXpWa3kxZFV2ZldIMzlSSHBSVGxBWlFHNnlYdktDaE82ME9BZ05GeHdEQlBhazluaWNUUk9lNUoyRWdNVUdUOGhZLUxvTW1MUE1qMXNRZHRtRFowVGhmVnlSTlVsR1E5Q2NKMXJSTHA5U2UwZHJoYWpaRlZqU1VvS1FjNWQ1TXBraGQ5ZGlxNWR3Zi1wUU5QZnpRNjZjdlVPa3B3?oc=5" target="_blank" rel="noopener">Bulls team: Forgotten Springbok starts against the All Blacks as Johan Ackermann unleashes new signings - Planet Rugby</a></h2>
+          <p class="summary">Bulls team: Forgotten Springbok starts against the All Blacks as Johan Ackermann unleashes new signings Planet Rugby</p>
+          <a class="readmore" href="https://news.google.com/rss/articles/CBMipgFBVV95cUxPeDBHZXpWa3kxZFV2ZldIMzlSSHBSVGxBWlFHNnlYdktDaE82ME9BZ05GeHdEQlBhazluaWNUUk9lNUoyRWdNVUdUOGhZLUxvTW1MUE1qMXNRZHRtRFowVGhmVnlSTlVsR1E5Q2NKMXJSTHA5U2UwZHJoYWpaRlZqU1VvS1FjNWQ1TXBraGQ5ZGlxNWR3Zi1wUU5QZnpRNjZjdlVPa3B3?oc=5" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card">
+          <div class="meta">
+            <span class="pill league">Japan</span>
+            <span class="pill source">The Guardian – Rugby Union</span>
+            <span class="date">Thu 13 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/sport/2026/aug/13/wallabies-team-selection-carter-gordon-australia-vs-japan-rugby-union-test" target="_blank" rel="noopener">Carter Gordon returns for Wallabies in ‘balanced selection’ for second Japan Test</a></h2>
+          <p class="summary">Fly-half overcomes calf injury to partner Ryan Lonergan in halves Prop Massimo De Lutiis primed to become 1,000th player capped After three false starts, the Carter Gordon era for the Wallabies may have finally arrived after the flyhalf was named in the Austra…</p>
+          <a class="readmore" href="https://www.theguardian.com/sport/2026/aug/13/wallabies-team-selection-carter-gordon-australia-vs-japan-rugby-union-test" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+  </main>
+  <footer>
+    <p>Scrum Wire pulls public RSS feeds and shows the headline, a short trimmed summary, and a link to the full article at the original source. Copyright of each story stays with its publisher. Rebuilt automatically every morning.</p>
+    <p>&copy; 2026 Scrum Wire &middot; a personal, non-commercial news reader.</p>
+  </footer>
+</body>
+</html>
