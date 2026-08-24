@@ -3,9 +3,11 @@
 A self-updating website that pulls rugby and football RSS feeds every
 morning, keeps only transfer / signing / rumour stories, trims the waffle,
 and shows them on a clean, phone-friendly, dyslexia-friendly page. A second
-page shows today's fixtures and yesterday's results. Runs entirely on free
-GitHub features. No server, no ongoing cost, nothing to keep running on your
-own machine.
+page shows today's fixtures, yesterday's results, and — for any league with
+nothing on today — its next scheduled fixture, so quiet days and off-season
+gaps (e.g. rugby in August) never just show a blank page. Runs entirely on
+free GitHub features. No server, no ongoing cost, nothing to keep running on
+your own machine.
 
 Rebuilt from Gregg's updated handover brief (24 August 2026), evolving the
 original rugby-only "Scrum Wire" into a combined two-sport site. Same
@@ -16,7 +18,8 @@ AI-generated content — with the changes noted below.
 
 - `scripts/build.py` fetches the rugby + football feeds, filters for
   transfer news, tags each story by sport/league/country, writes `index.html`.
-- `scripts/fixtures.py` fetches today's fixtures and yesterday's results,
+- `scripts/fixtures.py` fetches today's fixtures, yesterday's results, and
+  a "Coming Up" section (each quiet league's next scheduled fixture),
   writes `fixtures.html`. Degrades gracefully (explains itself, doesn't
   break the build) if no data source is connected yet.
 - `.github/workflows/build.yml` runs both scripts automatically (GitHub

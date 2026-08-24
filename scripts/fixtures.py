@@ -6,6 +6,9 @@ Design (agreed with Gregg): the site rebuilds ONCE a day, so instead of live
 scores we show:
   * TODAY'S FIXTURES  -- games happening today (kickoff times)
   * YESTERDAY'S RESULTS -- final scores from the day before (settled overnight)
+  * COMING UP -- for any league with nothing on today, its next scheduled
+    fixture(s), so a quiet day (or an off-season gap, e.g. rugby in August)
+    doesn't just show a blank page.
 
 This avoids any need for live/real-time data: by the next morning's build,
 yesterday's matches are finished and their scores are final.
@@ -80,6 +83,13 @@ def _get_json(url, headers=None):
         return json.loads(raw.decode("utf-8"))
 
 
+def _parse_dt(iso_str):
+    try:
+        return datetime.fromisoformat(iso_str.replace("Z", "+00:00"))
+    except Exception:
+        return None
+
+
 def fetch_football(day: datetime):
     """Return list of match dicts for a given UTC date, or [] if unavailable."""
     if not FOOTBALL_DATA_TOKEN:
@@ -96,26 +106,50 @@ def fetch_football(day: datetime):
             print(f"  ! football-data {label} {date_str}: {exc}", file=sys.stderr)
             continue
         for m in data.get("matches", []):
-            home = m.get("homeTeam", {}).get("shortName") or m.get("homeTeam", {}).get("name", "?")
-            away = m.get("awayTeam", {}).get("shortName") or m.get("awayTeam", {}).get("name", "?")
-            score = m.get("score", {}).get("fullTime", {})
-            hs, as_ = score.get("home"), score.get("away")
-            kickoff = m.get("utcDate", "")
-            try:
-                ko = datetime.fromisoformat(kickoff.replace("Z", "+00:00")).strftime("%H:%M")
-            except Exception:
-                ko = ""
-            out.append({
-                "sport": "Football",
-                "league": label,
-                "home": home,
-                "away": away,
-                "home_score": hs,
-                "away_score": as_,
-                "kickoff": ko,
-                "status": m.get("status", ""),
-            })
+            out.append(_football_match_dict(m, label))
     return out
+
+
+def fetch_football_next(exclude_labels):
+    """Return each remaining competition's single next scheduled match."""
+    if not FOOTBALL_DATA_TOKEN:
+        return []
+    today = datetime.now(timezone.utc)
+    date_from = today.strftime("%Y-%m-%d")
+    date_to = (today + timedelta(days=30)).strftime("%Y-%m-%d")
+    headers = {"X-Auth-Token": FOOTBALL_DATA_TOKEN}
+    out = []
+    for label, code in FOOTBALL_COMPETITIONS.items():
+        if label in exclude_labels:
+            continue
+        url = (f"https://api.football-data.org/v4/competitions/{code}/matches"
+               f"?status=SCHEDULED&dateFrom={date_from}&dateTo={date_to}")
+        try:
+            data = _get_json(url, headers)
+        except Exception as exc:  # noqa: BLE001
+            print(f"  ! football-data next {label}: {exc}", file=sys.stderr)
+            continue
+        matches = sorted(data.get("matches", []), key=lambda m: m.get("utcDate", ""))
+        if matches:
+            out.append(_football_match_dict(matches[0], label))
+    return out
+
+
+def _football_match_dict(m, label):
+    home = m.get("homeTeam", {}).get("shortName") or m.get("homeTeam", {}).get("name", "?")
+    away = m.get("awayTeam", {}).get("shortName") or m.get("awayTeam", {}).get("name", "?")
+    score = m.get("score", {}).get("fullTime", {})
+    when = _parse_dt(m.get("utcDate", ""))
+    return {
+        "sport": "Football",
+        "league": label,
+        "home": home,
+        "away": away,
+        "home_score": score.get("home"),
+        "away_score": score.get("away"),
+        "when": when,
+        "status": m.get("status", ""),
+    }
 
 
 def fetch_rugby(day: datetime):
@@ -123,46 +157,69 @@ def fetch_rugby(day: datetime):
     date_str = day.strftime("%Y%m%d")
     out = []
     for label, league_id in RUGBY_COMPETITIONS.items():
-        url = (f"https://site.api.espn.com/apis/site/v2/sports/rugby/"
-               f"{league_id}/scoreboard?dates={date_str}")
         try:
-            data = _get_json(url)
+            data = _get_json(f"https://site.api.espn.com/apis/site/v2/sports/rugby/"
+                              f"{league_id}/scoreboard?dates={date_str}")
         except Exception as exc:  # noqa: BLE001
             print(f"  ! ESPN rugby {label} {date_str}: {exc}", file=sys.stderr)
             continue
         for e in data.get("events", []):
-            comp = (e.get("competitions") or [{}])[0]
-            competitors = comp.get("competitors", [])
-            home = next((c for c in competitors if c.get("homeAway") == "home"), {})
-            away = next((c for c in competitors if c.get("homeAway") == "away"), {})
-            status = comp.get("status", {}).get("type", {}).get("name", "")
-            hs = home.get("score") if status == "STATUS_FINAL" else None
-            as_ = away.get("score") if status == "STATUS_FINAL" else None
-            kickoff = e.get("date", "")
-            try:
-                ko = datetime.fromisoformat(kickoff.replace("Z", "+00:00")).strftime("%H:%M")
-            except Exception:
-                ko = ""
-            out.append({
-                "sport": "Rugby",
-                "league": label,
-                "home": home.get("team", {}).get("displayName", "?"),
-                "away": away.get("team", {}).get("displayName", "?"),
-                "home_score": hs,
-                "away_score": as_,
-                "kickoff": ko,
-                "status": status,
-            })
+            out.append(_rugby_match_dict(e, label))
     return out
 
 
-def match_row(m, show_score):
+def fetch_rugby_next(exclude_labels):
+    """Return each remaining competition's next scheduled round.
+
+    ESPN's scoreboard endpoint returns the next scheduled round by default
+    when called with no `dates` param -- verified live before relying on it.
+    """
+    out = []
+    for label, league_id in RUGBY_COMPETITIONS.items():
+        if label in exclude_labels:
+            continue
+        try:
+            data = _get_json(f"https://site.api.espn.com/apis/site/v2/sports/rugby/"
+                              f"{league_id}/scoreboard")
+        except Exception as exc:  # noqa: BLE001
+            print(f"  ! ESPN rugby next {label}: {exc}", file=sys.stderr)
+            continue
+        for e in data.get("events", []):
+            m = _rugby_match_dict(e, label)
+            if m["status"] == "STATUS_SCHEDULED":
+                out.append(m)
+    return out
+
+
+def _rugby_match_dict(e, label):
+    comp = (e.get("competitions") or [{}])[0]
+    competitors = comp.get("competitors", [])
+    home = next((c for c in competitors if c.get("homeAway") == "home"), {})
+    away = next((c for c in competitors if c.get("homeAway") == "away"), {})
+    status = comp.get("status", {}).get("type", {}).get("name", "")
+    return {
+        "sport": "Rugby",
+        "league": label,
+        "home": home.get("team", {}).get("displayName", "?"),
+        "away": away.get("team", {}).get("displayName", "?"),
+        "home_score": home.get("score") if status == "STATUS_FINAL" else None,
+        "away_score": away.get("score") if status == "STATUS_FINAL" else None,
+        "when": _parse_dt(e.get("date", "")),
+        "status": status,
+    }
+
+
+def match_row(m, mode):
     left = html.escape(m["home"])
     right = html.escape(m["away"])
-    if show_score and m["home_score"] is not None and m["away_score"] is not None:
+    if mode == "result" and m["home_score"] is not None and m["away_score"] is not None:
         mid = f'<span class="score">{m["home_score"]} &ndash; {m["away_score"]}</span>'
+    elif mode == "upcoming" and m["when"]:
+        mid = f'<span class="kickoff">{html.escape(m["when"].strftime("%a %d %b, %H:%M"))}</span>'
+    elif m["when"]:
+        mid = f'<span class="kickoff">{html.escape(m["when"].strftime("%H:%M"))}</span>'
     else:
-        mid = f'<span class="kickoff">{html.escape(m["kickoff"] or "TBC")}</span>'
+        mid = '<span class="kickoff">TBC</span>'
     return f"""
       <div class="match" data-sport="{html.escape(m['sport'])}" data-league="{html.escape(m['league'])}">
         <span class="team home">{left}</span>
@@ -172,7 +229,7 @@ def match_row(m, show_score):
       </div>"""
 
 
-def section(title, matches, show_score):
+def section(title, matches, mode):
     if not matches:
         body = '<p class="empty">Nothing listed for the selected leagues.</p>'
     else:
@@ -182,13 +239,13 @@ def section(title, matches, show_score):
             by_league.setdefault(m["league"], []).append(m)
         blocks = []
         for lg, ms in by_league.items():
-            rows = "\n".join(match_row(m, show_score) for m in ms)
+            rows = "\n".join(match_row(m, mode) for m in ms)
             blocks.append(f'<h3 class="lg-head">{html.escape(lg)}</h3>{rows}')
         body = "\n".join(blocks)
     return f'<section class="fx-section"><h2>{html.escape(title)}</h2>{body}</section>'
 
 
-def render(today_matches, yesterday_matches, note):
+def render(today_matches, yesterday_matches, coming_up, note):
     now = datetime.now(timezone.utc)
     updated = now.strftime("%A %d %B %Y, %H:%M UTC")
     today_label = now.strftime("%A %d %B")
@@ -196,14 +253,16 @@ def render(today_matches, yesterday_matches, note):
 
     note_html = f'<p class="note">{html.escape(note)}</p>' if note else ""
 
-    today_html = section(f"Today's Fixtures - {today_label}", today_matches, show_score=False)
-    yday_html = section(f"Yesterday's Results - {yday_label}", yesterday_matches, show_score=True)
+    today_html = section(f"Today's Fixtures - {today_label}", today_matches, mode="today")
+    yday_html = section(f"Yesterday's Results - {yday_label}", yesterday_matches, mode="result")
+    coming_html = (section("Coming Up", coming_up, mode="upcoming") if coming_up else "")
 
     return TEMPLATE.format(
         updated=updated,
         note=note_html,
         today=today_html,
         yesterday=yday_html,
+        coming_up=coming_html,
         year=now.year,
     )
 
@@ -282,6 +341,7 @@ TEMPLATE = """<!DOCTYPE html>
   <main class="wrap">
     {note}
     {today}
+    {coming_up}
     {yesterday}
   </main>
 
@@ -351,7 +411,14 @@ def main():
                 "doesn't need one, so rugby fixtures already show below "
                 "when there are any scheduled.")
 
-    page = render(today_matches, yday_matches, note)
+    # Coming Up: for any league with nothing scheduled today, show its next
+    # fixture instead of leaving that league silent (e.g. rugby's August gap).
+    leagues_today = {m["league"] for m in today_matches}
+    print("Fetching next scheduled fixtures for quiet leagues...")
+    coming_up = fetch_rugby_next(leagues_today) + fetch_football_next(leagues_today)
+    coming_up.sort(key=lambda m: m["when"] or datetime.max.replace(tzinfo=timezone.utc))
+
+    page = render(today_matches, yday_matches, coming_up, note)
     with open("fixtures.html", "w", encoding="utf-8") as fh:
         fh.write(page)
     print("Wrote fixtures.html")
