@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#1f5c3d"/>
+  <rect x="0" y="420" width="512" height="92" rx="0" fill="#164a30"/>
+  <circle cx="256" cy="228" r="132" fill="#e9b949"/>
+  <g fill="#1f5c3d">
+    <polygon points="256,120 289,192 368,199 308,251 328,328 256,286 184,328 204,251 144,199 223,192"/>
+  </g>
+  <text x="256" y="470" font-family="Georgia, 'Times New Roman', serif" font-size="54" font-weight="700" fill="#f3efe4" text-anchor="middle">TW</text>
+</svg>

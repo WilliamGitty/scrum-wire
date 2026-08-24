@@ -1,68 +1,102 @@
-# Scrum Wire — daily rugby transfer news
+# The Transfer Wire — daily rugby & football transfer news
 
-A self-updating website that pulls rugby RSS feeds every morning, keeps only
-transfer / signing / rumour stories, trims the waffle, and shows them on a
-clean, phone-friendly, dyslexia-friendly page. Runs entirely on free GitHub
-features. No server, no ongoing cost, nothing to keep running on your own
-machine.
+A self-updating website that pulls rugby and football RSS feeds every
+morning, keeps only transfer / signing / rumour stories, trims the waffle,
+and shows them on a clean, phone-friendly, dyslexia-friendly page. A second
+page shows today's fixtures and yesterday's results. Runs entirely on free
+GitHub features. No server, no ongoing cost, nothing to keep running on your
+own machine.
 
-Built from Gregg's handover brief (20 August 2026). Same architecture and
-design as specified there — RSS in, filtered, no AI-generated content —
-with two changes from the original doc, noted below.
+Rebuilt from Gregg's updated handover brief (24 August 2026), evolving the
+original rugby-only "Scrum Wire" into a combined two-sport site. Same
+architecture and design as specified there — RSS in, filtered, no
+AI-generated content — with the changes noted below.
 
 ## How it works
 
-- `scripts/build.py` fetches the feeds, filters for transfer news, writes `index.html`.
-- `.github/workflows/build.yml` runs that script automatically (GitHub Actions
-  — this is the "cronjob") and deploys straight to GitHub Pages.
-- Live at: **https://williamgitty.github.io/scrum-wire/**
+- `scripts/build.py` fetches the rugby + football feeds, filters for
+  transfer news, tags each story by sport/league/country, writes `index.html`.
+- `scripts/fixtures.py` fetches today's fixtures and yesterday's results,
+  writes `fixtures.html`. Degrades gracefully (explains itself, doesn't
+  break the build) if no data source is connected yet.
+- `.github/workflows/build.yml` runs both scripts automatically (GitHub
+  Actions — this is the "cronjob") and deploys straight to GitHub Pages.
+- Live at: **https://williamgitty.github.io/transfer-wire/**
 
-## Changes from Gregg's original handover doc
+## What's new in this rebuild
 
-1. **Cron redundancy.** The original had one daily trigger. GitHub's Actions
-   scheduler has repeatedly, silently dropped single scheduled triggers on
-   other briefings built this way — so this runs three staggered times daily
-   (06:30, 07:00, 07:30 UTC) instead of one. Harmless if more than one fires;
-   the page just rebuilds from the same live feeds again.
-2. **Deploys via GitHub Actions' Pages action** (`actions/deploy-pages`)
+- **Football added alongside rugby** — same filtering/tagging approach,
+  separate feed list, one combined page with a sport filter.
+- **Sport → league → country filtering**, a pinned search box, and per-story
+  "NEW" badges (stored in each device's browser via `localStorage`, so
+  what's "new" to you doesn't affect anyone else).
+- **10-day auto-delete** — stories older than 10 days drop off automatically
+  on the next build.
+- **Fixtures & Results page** — today's fixtures and yesterday's final
+  scores, in a second page linked from the header nav.
+- **PWA support** — `manifest.webmanifest` + `icon.svg` at the repo root, so
+  the site can be "added to home screen" like an app.
+- **Dyslexia-friendly styling carried over** — Atkinson Hyperlegible body
+  font, Bricolage Grotesque headings, high contrast, adjustable text size.
+
+## Changes from Gregg's handover doc
+
+1. **RugbyPass feed URL.** The handover's URL (`/feed/`) still 404s — same
+   issue as the original Scrum Wire build. Real feed: `/feeds/rss/`.
+2. **ESPN Soccer feed dropped.** It consistently returns HTTP 202 with an
+   empty body (tried multiple path variants — all blocked, likely
+   bot-protected). Replaced with **90min.com** (`https://www.90min.com/feed`),
+   verified live to return 90 real items.
+3. **Deploys via GitHub Actions' Pages action** (`actions/deploy-pages`)
    rather than "Deploy from a branch" + a `/docs` folder — functionally the
-   same result, just the pattern used consistently across the other RSS
-   briefings in this account. `index.html` lives at the repo root, not
-   `docs/index.html`.
+   same result, just the pattern used consistently across the other
+   RSS/AI briefings in this account. `index.html` and `fixtures.html` live
+   at the repo root, not inside `docs/`.
+4. **Cron redundancy.** Three staggered daily triggers (06:30, 07:00, 07:30
+   UTC) instead of one — GitHub's Actions scheduler has repeatedly, silently
+   dropped single scheduled triggers on other briefings built this way.
+   Harmless if more than one fires; the page just rebuilds from the same
+   live feeds again.
+
+## Fixtures & Results — data source
+
+Fixtures/results aren't in the transfer RSS feeds, so `scripts/fixtures.py`
+needs its own data source:
+
+- **Football**: [football-data.org](https://www.football-data.org/) free
+  tier. Needs a free account (sign up yourself — this can't be automated)
+  and its API token added as a GitHub repo secret named
+  `FOOTBALL_DATA_TOKEN` (Settings → Secrets and variables → Actions → New
+  repository secret). Without it, the fixtures page still builds — it just
+  explains that a data source isn't connected yet.
+- **Rugby**: no reliable free fixtures API found yet. Left for a follow-up —
+  `fixtures.py`'s data structures already support adding rugby matches
+  (`sport: "Rugby"` entries), so it's a case of finding/wiring a source, not
+  restructuring the page.
 
 ## Sources — verified live before adding
 
-Every feed below was checked with a live `curl` request before being added
+Every feed was checked with a live `curl` request before being added
 (several guessed URLs from official league/club sites 404'd or don't exist —
 those sites don't publish their own RSS feeds).
 
-| League | Source | Feed |
+| Sport | Source | Feed |
 |---|---|---|
-| Wales | BBC Sport – Welsh Rugby | direct feed |
-| Wales | WalesOnline Rugby | direct feed |
-| Premiership / General | BBC Sport – Rugby Union | direct feed |
-| Premiership / General | RugbyPass | direct feed — **note:** Gregg's doc had `/feed/`, which 404s; the real path is `/feeds/rss/` |
-| Premiership / General | The Guardian – Rugby Union | direct feed |
-| Premiership / General | Sky Sports – Rugby Union | direct feed |
-| URC | Google News search ("URC rugby transfer") | no dedicated URC transfer RSS exists — see note below |
-| Top 14 | Google News search ("Top 14 rugby transfer") | same reason |
-| South Africa | SA Rugby Mag | direct feed |
-| South Africa | Google News search ("springbok rugby transfer") | supplements SA Rugby Mag |
-| New Zealand | Google News search ("all blacks rugby transfer") | no dedicated NZ rugby transfer RSS found |
-| Australia | SMH – Rugby Union | direct feed |
-| Australia | Google News search ("wallabies rugby transfer") | supplements SMH |
-| Japan | Google News search ("japan rugby league one transfer") | no dedicated Japan rugby RSS found |
-| Champions Cup | Google News search ("champions cup rugby transfer") | EPCR's own site has no RSS |
+| Rugby | BBC Sport – Rugby Union | direct feed |
+| Rugby | BBC Sport – Welsh Rugby | direct feed |
+| Rugby | WalesOnline Rugby | direct feed |
+| Rugby | RugbyPass | direct feed — **note:** handover doc had `/feed/`, which 404s; real path is `/feeds/rss/` |
+| Rugby | The Guardian – Rugby Union | direct feed |
+| Rugby | Sky Sports – Rugby Union | direct feed |
+| Football | BBC Sport – Football | direct feed |
+| Football | Sky Sports – Transfer Centre | direct feed |
+| Football | The Guardian – Football | direct feed |
+| Football | The Guardian – Transfer Window | direct feed |
+| Football | 90min | direct feed — **note:** replaces ESPN Soccer, which is blocked (HTTP 202, empty body) |
 
-**Why Google News search feeds for the harder leagues:** URC, Top 14, South
-Africa, New Zealand, Australia, and Japan don't have their own reliable
-transfer-news RSS feeds — checked directly against official league/club
-sites and known rugby press sites, none publish one. `news.google.com/rss/search?q=...`
-is a real, public RSS endpoint that aggregates genuine articles from
-legitimate outlets (Planet Rugby, RugbyPass, FloRugby, local press, etc.) —
-verified live to return real transfer headlines, not spam, before adding.
-Links go through a Google News redirect to the original article, same as
-clicking a Google News result normally would.
+League and country tags (Premiership, URC, Top 14, Springboks, Premier
+League, La Liga, etc.) are detected per-story from the article text, not
+from separate feeds — see `TAGS` near the top of `scripts/build.py`.
 
 ## Tweaks you might want later
 
@@ -70,8 +104,8 @@ clicking a Google News result normally would.
 `.github/workflows/build.yml` (UTC).
 
 **Add or remove news sources** — edit the `FEEDS` list near the top of
-`scripts/build.py`. Each entry is `(league label, source name, RSS url)`.
-Always test a candidate feed live before adding it:
+`scripts/build.py`. Format: `(sport, source name, RSS url)`. Always test a
+candidate feed live before adding it:
 
 ```bash
 curl -s -A "Mozilla/5.0" --max-time 10 -L "<feed-url>" | grep -oE "<\?xml|<rss|<feed"
@@ -80,25 +114,23 @@ curl -s -A "Mozilla/5.0" --max-time 10 -L "<feed-url>" | grep -oE "<\?xml|<rss|<
 **Make the filter tighter or looser** — edit `TRANSFER_KEYWORDS` in
 `scripts/build.py`.
 
-**Add more leagues to the tags** — edit `LEAGUE_TAGS`.
+**Add or change league/country tags** — edit `TAGS` in `scripts/build.py`.
+
+**Add football competitions to the fixtures page** — edit
+`FOOTBALL_COMPETITIONS` in `scripts/fixtures.py` (uses football-data.org
+competition codes).
 
 **Rename the site / change colours** — the title and colour variables
-(`:root {...}`) live in the `TEMPLATE` string near the bottom of `build.py`.
-
-## Want real AI-written summaries later?
-
-The current version shows each feed's own summary, trimmed. If you want each
-story rewritten into a tight 2-line brief, `build.py` can call an AI API on
-the schedule — that needs a paid API key added as a GitHub secret
-(`ANTHROPIC_API_KEY`) and a small code change. Not required — everything
-works without it, and it introduces a small ongoing cost plus a runtime
-dependency on the API.
+(`:root {...}`) live in the `TEMPLATE` strings in `build.py` and
+`fixtures.py`.
 
 ## If something looks wrong
 
 - **Page is blank / "No transfer stories found"** — the feeds had no
   matching items in the last 10 days, or a feed URL changed. Run the
   workflow manually (Actions tab → Run workflow) and check the log.
+- **Fixtures page says no data source connected** — `FOOTBALL_DATA_TOKEN`
+  repo secret isn't set yet, or rugby fixtures (no source wired in).
 - **Page not updating** — GitHub pauses scheduled workflows on repos with
   no activity for 60 days; any commit (including the workflow's own daily
   one) re-enables it, so this shouldn't happen in normal operation.
