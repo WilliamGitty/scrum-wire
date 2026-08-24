@@ -3,155 +3,225 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Scrum Wire &mdash; Rugby Transfer News</title>
-<meta name="description" content="Daily rugby transfer rumours and confirmed moves. Wales, Premiership and the world's pro leagues, filtered and clean.">
+<title>The Transfer Wire</title>
+<meta name="description" content="Daily rugby and football transfer news. Rumours and confirmed moves, filtered, trimmed, easy to read.">
+<meta name="theme-color" content="#123c2a">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink:      #10231b;
-    --paper:    #f3efe4;
-    --card:     #ffffff;
-    --line:     #d8d2c0;
-    --pitch:    #1f5c3d;   /* deep pitch green */
-    --pitch-2:  #2e7d52;
-    --chalk:    #e9b949;   /* touchline yellow */
-    --muted:    #5c6b62;
+    --ink:#10231b; --paper:#f3efe4; --card:#ffffff; --line:#d8d2c0;
+    --pitch:#1f5c3d; --pitch-2:#2e7d52; --chalk:#e9b949; --muted:#5c6b62;
+    --football:#2b5fd0;
   }
-  * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
+  * { box-sizing:border-box; }
+  html { -webkit-text-size-adjust:100%; }
   body {
-    margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: "Atkinson Hyperlegible", system-ui, sans-serif;
-    font-size: 18px;
-    line-height: 1.65;
-    letter-spacing: 0.01em;
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Atkinson Hyperlegible",system-ui,sans-serif;
+    font-size:18px; line-height:1.65; letter-spacing:0.01em;
   }
-  a { color: var(--pitch); }
+  a { color:var(--pitch); }
+  .wrap { max-width:720px; margin:0 auto; }
 
-  /* ---- Header ---- */
-  header {
-    background: var(--pitch);
-    color: #fff;
-    padding: 28px 20px 24px;
-    border-bottom: 6px solid var(--chalk);
+  .topbar {
+    position:sticky; top:0; z-index:30; background:var(--pitch);
+    padding:10px 16px; display:flex; gap:8px; align-items:center;
+    border-bottom:3px solid var(--chalk);
   }
-  .wrap { max-width: 720px; margin: 0 auto; }
+  .topbar .search {
+    flex:1 1 auto; min-width:0;
+    font-family:"Atkinson Hyperlegible",system-ui,sans-serif; font-size:1rem;
+    color:var(--ink); background:#fff; border:0; border-radius:999px;
+    padding:11px 16px;
+  }
+  .topbar .search:focus-visible { outline:3px solid var(--chalk); outline-offset:1px; }
+  .size-btn {
+    flex:0 0 auto; font-family:"Bricolage Grotesque",system-ui,sans-serif;
+    font-weight:700; font-size:0.9rem; color:#fff; background:transparent;
+    border:1.5px solid rgba(255,255,255,.5); border-radius:9px;
+    width:38px; height:38px; cursor:pointer;
+  }
+  .size-btn:hover, .size-btn:focus-visible { border-color:var(--chalk); }
+
+  header { background:var(--pitch); color:#fff; padding:22px 20px 24px; }
   .brand {
-    font-family: "Bricolage Grotesque", system-ui, sans-serif;
-    font-weight: 800;
-    font-size: clamp(2rem, 7vw, 3rem);
-    line-height: 1.02;
-    margin: 0;
-    letter-spacing: -0.02em;
+    font-family:"Bricolage Grotesque",system-ui,sans-serif; font-weight:800;
+    font-size:clamp(1.9rem,6.5vw,2.8rem); line-height:1.02; margin:0;
+    letter-spacing:-0.02em;
   }
-  .brand .ball { color: var(--chalk); }
-  .tagline {
-    margin: 8px 0 0;
-    font-size: 1rem;
-    color: #cfe6da;
-    max-width: 46ch;
+  .brand .ball { color:var(--chalk); }
+  .tagline { margin:8px 0 0; font-size:0.98rem; color:#cfe6da; max-width:48ch; }
+  .updated { margin-top:14px; font-size:0.82rem; color:#b9d8c8; display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .dot { width:8px; height:8px; border-radius:50%; background:var(--chalk); display:inline-block; }
+  nav.pages { margin-top:16px; display:flex; gap:8px; }
+  nav.pages a {
+    font-weight:700; font-size:0.9rem; text-decoration:none; color:#fff;
+    background:rgba(255,255,255,.12); padding:8px 16px; border-radius:999px;
   }
-  .updated {
-    margin-top: 16px;
-    font-size: 0.85rem;
-    color: #b9d8c8;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--chalk); display: inline-block; }
+  nav.pages a.active { background:var(--chalk); color:var(--ink); }
 
-  /* ---- Feed ---- */
-  main { padding: 22px 16px 60px; }
-  .count {
-    font-size: 0.85rem;
-    color: var(--muted);
-    margin: 4px 0 20px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+  .controls { padding:14px 16px 4px; display:flex; flex-direction:column; gap:10px; }
+  .selectrow { display:flex; gap:8px; }
+  .selectrow select {
+    flex:1 1 0; min-width:0;
+    font-family:"Atkinson Hyperlegible",system-ui,sans-serif; font-size:0.95rem;
+    font-weight:700; color:var(--ink); background:#fff;
+    border:1.5px solid var(--line); border-radius:12px; padding:10px 12px;
   }
-  .card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 18px 18px 16px;
-    margin-bottom: 16px;
+  .leagues { display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; scrollbar-width:none; }
+  .leagues::-webkit-scrollbar { display:none; }
+  .filter-btn {
+    flex:0 0 auto; font-family:"Atkinson Hyperlegible",system-ui,sans-serif;
+    font-size:0.9rem; font-weight:700; color:var(--pitch); background:#fff;
+    border:1.5px solid var(--line); border-radius:999px; padding:7px 15px;
+    cursor:pointer; white-space:nowrap;
   }
-  .meta {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
-  }
-  .pill {
-    font-size: 0.72rem;
-    font-weight: 700;
-    padding: 3px 9px;
-    border-radius: 999px;
-    letter-spacing: 0.03em;
-  }
-  .pill.league { background: var(--pitch); color: #fff; }
-  .pill.source { background: #eee7d5; color: var(--muted); }
-  .date { font-size: 0.78rem; color: var(--muted); margin-left: auto; }
-  .card h2 {
-    font-family: "Bricolage Grotesque", system-ui, sans-serif;
-    font-weight: 700;
-    font-size: 1.28rem;
-    line-height: 1.22;
-    margin: 0 0 8px;
-    letter-spacing: -0.01em;
-  }
-  .card h2 a { color: var(--ink); text-decoration: none; }
-  .card h2 a:hover, .card h2 a:focus { color: var(--pitch); text-decoration: underline; }
-  .summary { margin: 0 0 12px; color: #26362d; }
-  .readmore {
-    font-weight: 700;
-    font-size: 0.9rem;
-    text-decoration: none;
-    color: var(--pitch-2);
-  }
-  .readmore:hover, .readmore:focus { text-decoration: underline; }
-  .empty { text-align: center; color: var(--muted); padding: 40px 0; }
+  .filter-btn.active { background:var(--pitch); color:#fff; border-color:var(--pitch); }
 
-  footer {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 0 16px 40px;
-    color: var(--muted);
-    font-size: 0.8rem;
-    line-height: 1.5;
+  main { padding:16px 16px 60px; }
+  .count { font-size:0.85rem; color:var(--muted); margin:4px 0 18px; text-transform:uppercase; letter-spacing:0.08em; }
+  .card { position:relative; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px 18px 16px; margin-bottom:16px; }
+  .card[hidden] { display:none; }
+  .new-badge {
+    position:absolute; top:12px; right:12px; background:var(--chalk);
+    color:var(--ink); font-family:"Bricolage Grotesque",system-ui,sans-serif;
+    font-weight:800; font-size:0.68rem; letter-spacing:0.05em;
+    padding:3px 8px; border-radius:999px;
   }
-  footer a { color: var(--pitch-2); }
+  .meta { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:10px; padding-right:44px; }
+  .pill { font-size:0.72rem; font-weight:700; padding:3px 9px; border-radius:999px; letter-spacing:0.03em; }
+  .pill.sport.rugby { background:var(--pitch); color:#fff; }
+  .pill.sport.football { background:var(--football); color:#fff; }
+  .pill.league { background:#e7efe9; color:var(--pitch); }
+  .pill.source { background:#eee7d5; color:var(--muted); }
+  .date { font-size:0.78rem; color:var(--muted); margin-left:auto; }
+  .card h2 { font-family:"Bricolage Grotesque",system-ui,sans-serif; font-weight:700; font-size:1.28rem; line-height:1.22; margin:0 0 8px; letter-spacing:-0.01em; }
+  .card h2 a { color:var(--ink); text-decoration:none; }
+  .card h2 a:hover, .card h2 a:focus { color:var(--pitch); text-decoration:underline; }
+  .summary { margin:0 0 12px; color:#26362d; }
+  .readmore { font-weight:700; font-size:0.9rem; text-decoration:none; color:var(--pitch-2); }
+  .readmore:hover, .readmore:focus { text-decoration:underline; }
+  .empty { text-align:center; color:var(--muted); padding:40px 0; }
 
-  :focus-visible { outline: 3px solid var(--chalk); outline-offset: 2px; border-radius: 4px; }
-
+  footer { max-width:720px; margin:0 auto; padding:0 16px 40px; color:var(--muted); font-size:0.8rem; line-height:1.5; }
+  footer a { color:var(--pitch-2); }
+  :focus-visible { outline:3px solid var(--chalk); outline-offset:2px; border-radius:4px; }
   @media (prefers-reduced-motion: no-preference) {
-    .card { transition: transform .15s ease, box-shadow .15s ease; }
-    .card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16,35,27,.08); }
+    .card { transition:transform .15s ease, box-shadow .15s ease; }
+    .card:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(16,35,27,.08); }
   }
 </style>
 </head>
 <body>
+  <div class="topbar">
+    <input type="search" id="search" class="search" placeholder="Search player, club or country…" aria-label="Search stories" autocomplete="off">
+    <button id="text-smaller" class="size-btn" aria-label="Smaller text">A&minus;</button>
+    <button id="text-bigger" class="size-btn" aria-label="Bigger text">A+</button>
+  </div>
+
   <header>
     <div class="wrap">
-      <h1 class="brand">Scrum Wire <span class="ball">&#127945;</span></h1>
-      <p class="tagline">Daily rugby transfer rumours and confirmed moves. Wales &amp; the Premiership first, the world's pro leagues right behind. Filtered, trimmed, easy to read.</p>
-      <div class="updated"><span class="dot"></span> Updated Monday 24 August 2026, 08:12 UTC</div>
+      <h1 class="brand">The Transfer Wire <span class="ball">&#9917;</span></h1>
+      <p class="tagline">Daily rugby &amp; football transfer news. Rumours and confirmed moves, filtered, trimmed, easy to read.</p>
+      <div class="updated"><span class="dot"></span> Updated Monday 24 August 2026, 10:51 UTC</div>
+      <nav class="pages">
+        <a href="index.html" class="active">Transfers</a>
+        <a href="fixtures.html">Fixtures &amp; Results</a>
+      </nav>
     </div>
   </header>
+
+  <div class="controls wrap">
+    <div class="selectrow">
+      <select id="sport-select" aria-label="Sport">
+        <option value="all">All sports</option>
+        <option value="Rugby">Rugby</option>
+        <option value="Football">Football</option>
+      </select>
+      <select id="country-select" aria-label="Country">
+        <option value="all">All countries</option>
+      </select>
+    </div>
+    <div class="leagues" id="leagues">
+      <button class="filter-btn active" data-filter="all">All leagues</button>
+    </div>
+  </div>
+
   <main class="wrap">
-    <p class="count">29 stories</p>
+    <p class="count" id="count">120 stories</p>
+    <div id="feed">
     
-        <article class="card">
+        <article class="card" data-id="a05141d120cf"
+                 data-sport="Rugby"
+                 data-league="General"
+                 data-country=""
+                 data-search="rising star of the americas handed second chance in france chilean scrum-half lucas berti has landed a two-season contract with prod2 contenders fc grenoble.">
+          <span class="new-badge" hidden>NEW</span>
           <div class="meta">
-            
-            <span class="pill source">Sky Sports – Rugby Union</span>
+            <span class="pill sport rugby">Rugby</span> <span class="pill source">RugbyPass</span>
+            <span class="date">Mon 24 Aug</span>
+          </div>
+          <h2><a href="https://www.rugbypass.com/news/rising-star-of-the-americas-handed-second-chance-in-france/" target="_blank" rel="noopener">Rising star of the Americas handed second chance in France</a></h2>
+          <p class="summary">Chilean scrum-half Lucas Berti has landed a two-season contract with ProD2 contenders FC Grenoble.</p>
+          <a class="readmore" href="https://www.rugbypass.com/news/rising-star-of-the-americas-handed-second-chance-in-france/" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="e41cc0130f6e"
+                 data-sport="Rugby"
+                 data-league="General"
+                 data-country=""
+                 data-search="ref watch live! were liverpool right to be awarded penalty at newcastle? ">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport rugby">Rugby</span> <span class="pill source">Sky Sports - Rugby Union</span>
+            <span class="date">Mon 24 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/football/live-blog/12040/13576553/ref-watch-premier-league-weekend-reaction-live-dermot-gallagher-assesses-the-big-refereeing-decisions" target="_blank" rel="noopener">Ref Watch LIVE! Were Liverpool right to be awarded penalty at Newcastle?</a></h2>
+          
+          <a class="readmore" href="https://www.skysports.com/football/live-blog/12040/13576553/ref-watch-premier-league-weekend-reaction-live-dermot-gallagher-assesses-the-big-refereeing-decisions" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="ca898dd3245c"
+                 data-sport="Rugby"
+                 data-league="South Africa"
+                 data-country="South Africa"
+                 data-search="injuries take toll on boks with 4 changes to xv as erasmus makes peculiar kolisi move rassie erasmus has named his south africa side to take on the all blacks in the second test of rugby&#x27;s greatest rivalry series, with potentially four changes to the starting xv.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport rugby">Rugby</span> <span class="pill league">South Africa</span> <span class="pill source">RugbyPass</span>
+            <span class="date">Mon 24 Aug</span>
+          </div>
+          <h2><a href="https://www.rugbypass.com/news/injuries-take-toll-on-springboks-with-4-changes-as-rassie-erasmus-makes-peculiar-siya-kolisi-move-all-blacks-sacha-feinberg-mngomezulu/" target="_blank" rel="noopener">Injuries take toll on Boks with 4 changes to XV as Erasmus makes peculiar Kolisi move</a></h2>
+          <p class="summary">Rassie Erasmus has named his South Africa side to take on the All Blacks in the second Test of Rugby&#x27;s Greatest Rivalry series, with potentially four changes to the starting XV.</p>
+          <a class="readmore" href="https://www.rugbypass.com/news/injuries-take-toll-on-springboks-with-4-changes-as-rassie-erasmus-makes-peculiar-siya-kolisi-move-all-blacks-sacha-feinberg-mngomezulu/" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="f2ade6527d57"
+                 data-sport="Rugby"
+                 data-league="South Africa"
+                 data-country="South Africa"
+                 data-search="newcastle red bulls set to sign 147kg test monster to prem roster newcastle red bulls are continuing their mammoth recruitment drive ahead of the new season, with argentinian tighthead francisco moreno set to become their 23rd new signing of the summer.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport rugby">Rugby</span> <span class="pill league">South Africa</span> <span class="pill source">RugbyPass</span>
+            <span class="date">Mon 24 Aug</span>
+          </div>
+          <h2><a href="https://www.rugbypass.com/news/newcastle-red-bulls-set-to-sign-147kg-test-monster-to-prem-roster/" target="_blank" rel="noopener">Newcastle Red Bulls set to sign 147kg Test monster to PREM roster</a></h2>
+          <p class="summary">Newcastle Red Bulls are continuing their mammoth recruitment drive ahead of the new season, with Argentinian tighthead Francisco Moreno set to become their 23rd new signing of the summer.</p>
+          <a class="readmore" href="https://www.rugbypass.com/news/newcastle-red-bulls-set-to-sign-147kg-test-monster-to-prem-roster/" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="f1f31579c989"
+                 data-sport="Rugby"
+                 data-league="General"
+                 data-country=""
+                 data-search="free stream: good morning transfers on sky sports news ">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport rugby">Rugby</span> <span class="pill source">Sky Sports - Rugby Union</span>
             <span class="date">Mon 24 Aug</span>
           </div>
           <h2><a href="https://www.skysports.com/football/news/12040/13569345/free-stream-the-transfer-show-on-sky-sports-news-latest-football-transfer-news-updates-and-rumours" target="_blank" rel="noopener">FREE STREAM: Good Morning Transfers on Sky Sports News</a></h2>
@@ -159,10 +229,164 @@
           <a class="readmore" href="https://www.skysports.com/football/news/12040/13569345/free-stream-the-transfer-show-on-sky-sports-news-latest-football-transfer-news-updates-and-rumours" target="_blank" rel="noopener">Read full story &rarr;</a>
         </article>
 
-        <article class="card">
+        <article class="card" data-id="4af6383d0bc7"
+                 data-sport="Rugby"
+                 data-league="South Africa"
+                 data-country="South Africa"
+                 data-search="rassie erasmus sends two springboks back to their club two members of rassie erasmus’ extended south africa squad have been released to the lions for tuesday night’s clash with the all blacks at ellis park, with quan horn and boan venter both included in ivan van rooyen’s matchday 23.">
+          <span class="new-badge" hidden>NEW</span>
           <div class="meta">
-            
-            <span class="pill source">Sky Sports – Rugby Union</span>
+            <span class="pill sport rugby">Rugby</span> <span class="pill league">South Africa</span> <span class="pill source">RugbyPass</span>
+            <span class="date">Mon 24 Aug</span>
+          </div>
+          <h2><a href="https://www.rugbypass.com/news/rassie-erasmus-sends-two-springboks-back-to-their-club-quan-horn-boan-venter-all-blacks/" target="_blank" rel="noopener">Rassie Erasmus sends two Springboks back to their club</a></h2>
+          <p class="summary">Two members of Rassie Erasmus’ extended South Africa squad have been released to the Lions for Tuesday night’s clash with the All Blacks at Ellis Park, with Quan Horn and Boan Venter both included in Ivan van Rooyen’s matchday 23.</p>
+          <a class="readmore" href="https://www.rugbypass.com/news/rassie-erasmus-sends-two-springboks-back-to-their-club-quan-horn-boan-venter-all-blacks/" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="59256d9883ba"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="bournemouth latest: goalkeeper flying to uk as cherries move edges closer ">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">Sky Sports - Transfer Centre</span>
+            <span class="date">Mon 24 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/football/live-blog/12691/13279286/bournemouth-transfers-latest-news-rumours-and-gossip-live-updates-goals-and-highlights" target="_blank" rel="noopener">Bournemouth latest: Goalkeeper flying to UK as Cherries move edges closer</a></h2>
+          
+          <a class="readmore" href="https://www.skysports.com/football/live-blog/12691/13279286/bournemouth-transfers-latest-news-rumours-and-gossip-live-updates-goals-and-highlights" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="6945645f5074"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="mateta&#x27;s contract claim leaves palace with transfer decision following a dispute over the length of his contract, will jean-philippe mateta stay at crystal palace beyond the transfer window?">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Mon 24 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/articles/cz6465pj4njo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Mateta&#x27;s contract claim leaves Palace with transfer decision</a></h2>
+          <p class="summary">Following a dispute over the length of his contract, will Jean-Philippe Mateta stay at Crystal Palace beyond the transfer window?</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/articles/cz6465pj4njo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="acc5593d1567"
+                 data-sport="Football"
+                 data-league="General"
+                 data-country=""
+                 data-search="what does your premiership club need in final 11 days of transfer window? bbc scotland assesses the 12 top-flight clubs&#x27; needs as the transfer deadline approaches.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Mon 24 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/articles/cgmkmpj03zmo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">What does your Premiership club need in final 11 days of transfer window?</a></h2>
+          <p class="summary">BBC Scotland assesses the 12 top-flight clubs&#x27; needs as the transfer deadline approaches.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/articles/cgmkmpj03zmo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="9448255b4101"
+                 data-sport="Rugby"
+                 data-league="General"
+                 data-country=""
+                 data-search="alvarez booed by atletico fans amid arsenal interest - so will he leave? julian alvarez was booed by atletico madrid supporters on sunday after all the transfer window noise around him - does that mean a move to barcelona or arsenal is any closer?">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport rugby">Rugby</span> <span class="pill source">Sky Sports - Rugby Union</span>
+            <span class="date">Mon 24 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/football/news/12040/13576511/julian-alvarez-does-atletico-madrid-fans-booing-their-own-striker-increase-his-chances-of-an-arsenal-or-barcelona-move" target="_blank" rel="noopener">Alvarez booed by Atletico fans amid Arsenal interest - so will he leave?</a></h2>
+          <p class="summary">Julian Alvarez was booed by Atletico Madrid supporters on Sunday after all the transfer window noise around him - does that mean a move to Barcelona or Arsenal is any closer?</p>
+          <a class="readmore" href="https://www.skysports.com/football/news/12040/13576511/julian-alvarez-does-atletico-madrid-fans-booing-their-own-striker-increase-his-chances-of-an-arsenal-or-barcelona-move" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="3f5a0a3607ee"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="football transfer rumours: alvarez set for arsenal after being booed at atlético? today’s rumours laugh off heartburn booing julián alvarez during atlético madrid’s draw with villarreal on sunday has seemingly convinced the argentinian forward to consider joining arsenal in the window.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Mon 24 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/24/football-transfer-rumour-mill-julian-alvarez-arsenal-booed-atletico" target="_blank" rel="noopener">Football transfer rumours: Alvarez set for Arsenal after being booed at Atlético?</a></h2>
+          <p class="summary">Today’s rumours laugh off heartburn Booing Julián Alvarez during Atlético Madrid’s draw with Villarreal on Sunday has seemingly convinced the Argentinian forward to consider joining Arsenal in the window.</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/24/football-transfer-rumour-mill-julian-alvarez-arsenal-booed-atletico" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="7fd637826a82"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="premier league: 10 talking points from opening weekend of the season manchester united’s under-powered attack, brentford’s £39m bargain and dewsbury-hall delivers for everton arsenal’s treatment of gabriel martinelli has been questioned by ian wright after the brazil forward was left out of their squad for friday’s opening game…">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Mon 24 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/24/premier-league-10-talking-points-from-opening-weekend-action" target="_blank" rel="noopener">Premier League: 10 talking points from opening weekend of the season</a></h2>
+          <p class="summary">Manchester United’s under-powered attack, Brentford’s £39m bargain and Dewsbury-Hall delivers for Everton Arsenal’s treatment of Gabriel Martinelli has been questioned by Ian Wright after the Brazil forward was left out of their squad for Friday’s opening game…</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/24/premier-league-10-talking-points-from-opening-weekend-action" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="621eb3760953"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="chelsea change course with alonso primed to banish the chaos of youth the 44-year-old is focused on maintaining ‘emotional control’ and a slew of sensible signings offer genuine hope it is a necessary reset.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Mon 24 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/24/chelsea-change-course-with-alonso-primed-to-banish-the-chaos-of-youth" target="_blank" rel="noopener">Chelsea change course with Alonso primed to banish the chaos of youth</a></h2>
+          <p class="summary">The 44-year-old is focused on maintaining ‘emotional control’ and a slew of sensible signings offer genuine hope It is a necessary reset.</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/24/chelsea-change-course-with-alonso-primed-to-banish-the-chaos-of-youth" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="009981d21923"
+                 data-sport="Football"
+                 data-league="General"
+                 data-country=""
+                 data-search="podcast: a derby win, a new championship leader and who is winning the transfer window? dundee derby drama, transfer talk and a changing championship picture.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Mon 24 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sounds/play/p0p5z6zj?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Podcast: A derby win, a new Championship leader and who is winning the transfer window?</a></h2>
+          <p class="summary">Dundee Derby drama, transfer talk and a changing Championship picture.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sounds/play/p0p5z6zj?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="909fbecef889"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="arbeloa v alonso: benitez on his former players turned managers former liverpool manager rafael benitez on his former players xabi alonso and alvaro arbeloa who face each other as managers on monday when fulham host chelsea.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Mon 24 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/articles/ckge725zy1zo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Arbeloa v Alonso: Benitez on his former players turned managers</a></h2>
+          <p class="summary">Former Liverpool manager Rafael Benitez on his former players Xabi Alonso and Alvaro Arbeloa who face each other as managers on Monday when Fulham host Chelsea.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/articles/ckge725zy1zo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="aa876da6a955"
+                 data-sport="Rugby"
+                 data-league="General"
+                 data-country=""
+                 data-search="gauff &#x27;dangerous&#x27; for us open after cruising to second cincinnati title coco gauff defeated fellow american jessica pegula in straight sets, 6-2 6-4, to capture her second cincinnati open women&#x27;s singles title.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport rugby">Rugby</span> <span class="pill source">Sky Sports - Rugby Union</span>
             <span class="date">Mon 24 Aug</span>
           </div>
           <h2><a href="https://www.skysports.com/tennis/news/12040/13576498/cincinnati-open-coco-gauff-beats-jessica-pegula-in-straight-sets-to-clinch-second-cincinnati-title" target="_blank" rel="noopener">Gauff &#x27;dangerous&#x27; for US Open after cruising to second Cincinnati title</a></h2>
@@ -170,10 +394,14 @@
           <a class="readmore" href="https://www.skysports.com/tennis/news/12040/13576498/cincinnati-open-coco-gauff-beats-jessica-pegula-in-straight-sets-to-clinch-second-cincinnati-title" target="_blank" rel="noopener">Read full story &rarr;</a>
         </article>
 
-        <article class="card">
+        <article class="card" data-id="c615f89a42b8"
+                 data-sport="Rugby"
+                 data-league="New Zealand"
+                 data-country="New Zealand"
+                 data-search="grant williams was targetted in defence by the all blacks new zealand already had a recipe that worked, yet erasmus and his team went again with williams. for the second time, it backfired.">
+          <span class="new-badge" hidden>NEW</span>
           <div class="meta">
-            <span class="pill league">New Zealand</span>
-            <span class="pill source">RugbyPass</span>
+            <span class="pill sport rugby">Rugby</span> <span class="pill league">New Zealand</span> <span class="pill source">RugbyPass</span>
             <span class="date">Mon 24 Aug</span>
           </div>
           <h2><a href="https://www.rugbypass.com/news/grant-williams-was-targetted-and-harrased-by-the-all-blacks/" target="_blank" rel="noopener">Grant Williams was targetted in defence by the All Blacks</a></h2>
@@ -181,10 +409,74 @@
           <a class="readmore" href="https://www.rugbypass.com/news/grant-williams-was-targetted-and-harrased-by-the-all-blacks/" target="_blank" rel="noopener">Read full story &rarr;</a>
         </article>
 
-        <article class="card">
+        <article class="card" data-id="ba34e8f3885b"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="opening win was beyond anyone&#x27;s dreams - hull assistant holden following their huge win against manchester united, hull city assistant head coach dean holden joins gabby logan, danny murphy and joe hart in the match of the day studio.">
+          <span class="new-badge" hidden>NEW</span>
           <div class="meta">
-            
-            <span class="pill source">Sky Sports – Rugby Union</span>
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/videos/c0kmk6rd30no?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Opening win was beyond anyone&#x27;s dreams - Hull assistant Holden</a></h2>
+          <p class="summary">Following their huge win against Manchester United, Hull City assistant head coach Dean Holden joins Gabby Logan, Danny Murphy and Joe Hart in the Match of the Day studio.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/videos/c0kmk6rd30no?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="6886c0f7384b"
+                 data-sport="Football"
+                 data-league="General"
+                 data-country=""
+                 data-search="uefa chief ceferin rules out fifa presidency bid uefa president aleksander ceferin rules himself out of the running to replace gianni infantino, but expects a candidate to challenge the fifa president&#x27;s leadership in march.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/articles/cp878rp71v2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Uefa chief Ceferin rules out Fifa presidency bid</a></h2>
+          <p class="summary">Uefa president Aleksander Ceferin rules himself out of the running to replace Gianni Infantino, but expects a candidate to challenge the Fifa president&#x27;s leadership in March.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/articles/cp878rp71v2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="2a47d42661ca"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="how hull kept plan to stun man utd secret hull city boss sergej jakirovic kept his plan to topple manchester united on their premier league return under wraps for weeks, assistant head coach dean holden tells match of the day.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/articles/ce343r7245no?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">How Hull kept plan to stun Man Utd secret</a></h2>
+          <p class="summary">Hull City boss Sergej Jakirovic kept his plan to topple Manchester United on their Premier League return under wraps for weeks, assistant head coach Dean Holden tells Match of the Day.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/articles/ce343r7245no?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="2bbe76e99372"
+                 data-sport="Football"
+                 data-league="General"
+                 data-country=""
+                 data-search="women’s super league 2026-27 preview no 3: birmingham city back in the top flight after four seasons, amy merricks’ side have added wsl experience in a bid to consolidate guardian writers’ predicted position: 12th (nb: this is not necessarily tom garry’s prediction but the average of our writers’ tips) last season’s p…">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/24/womens-super-league-2026-27-preview-no-3-birmingham-city" target="_blank" rel="noopener">Women’s Super League 2026-27 preview No 3: Birmingham City</a></h2>
+          <p class="summary">Back in the top flight after four seasons, Amy Merricks’ side have added WSL experience in a bid to consolidate Guardian writers’ predicted position: 12th (NB: this is not necessarily Tom Garry’s prediction but the average of our writers’ tips) Last season’s p…</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/24/womens-super-league-2026-27-preview-no-3-birmingham-city" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="22f092095950"
+                 data-sport="Rugby"
+                 data-league="General"
+                 data-country=""
+                 data-search="papers: palace prepare audacious £50m bid for west ham captain bowen the top stories and transfer rumours from monday&#x27;s newspapers...">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport rugby">Rugby</span> <span class="pill source">Sky Sports - Rugby Union</span>
             <span class="date">Sun 23 Aug</span>
           </div>
           <h2><a href="https://www.skysports.com/football/news/12040/13576453/crystal-palace-transfer-news-eagles-prepare-audacious-50m-bid-to-lure-jarrod-bowen-back-to-premier-league-paper-talk" target="_blank" rel="noopener">Papers: Palace prepare audacious £50m bid for West Ham captain Bowen</a></h2>
@@ -192,10 +484,404 @@
           <a class="readmore" href="https://www.skysports.com/football/news/12040/13576453/crystal-palace-transfer-news-eagles-prepare-audacious-50m-bid-to-lure-jarrod-bowen-back-to-premier-league-paper-talk" target="_blank" rel="noopener">Read full story &rarr;</a>
         </article>
 
-        <article class="card">
+        <article class="card" data-id="c3b9ccc12f93"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="signs that jaissle&#x27;s newcastle are not to be written off newcastle united were predicted to struggle from the off by some pundits, but head coach matthias jaissle will take encouragement from aspects of their display even after conceding a late equaliser against liverpool">
+          <span class="new-badge" hidden>NEW</span>
           <div class="meta">
-            <span class="pill league">Premiership</span>
-            <span class="pill source">WalesOnline Rugby</span>
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/articles/c80n021k098o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Signs that Jaissle&#x27;s Newcastle are not to be written off</a></h2>
+          <p class="summary">Newcastle United were predicted to struggle from the off by some pundits, but head coach Matthias Jaissle will take encouragement from aspects of their display even after conceding a late equaliser against Liverpool</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/articles/c80n021k098o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="a0baaea880d1"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="man city ready to meet chelsea&#x27;s fernandez demand - monday&#x27;s gossip manchester city are ready to make enzo fernandez move, liverpool consider a third bid for yankuba minteh, and a barcelona full-back pushes to join manchester united.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/articles/czxqx29jy02o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Man City ready to meet Chelsea&#x27;s Fernandez demand - Monday&#x27;s gossip</a></h2>
+          <p class="summary">Manchester City are ready to make Enzo Fernandez move, Liverpool consider a third bid for Yankuba Minteh, and a Barcelona full-back pushes to join Manchester United.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/articles/czxqx29jy02o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="74377518c1f2"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="man utd latest: baleba passes medical ">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">Sky Sports - Transfer Centre</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/football/live-blog/12691/13025492/man-utd-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts" target="_blank" rel="noopener">Man Utd latest: Baleba passes medical</a></h2>
+          
+          <a class="readmore" href="https://www.skysports.com/football/live-blog/12691/13025492/man-utd-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="a2a59f1c7470"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="relief for iraola but liverpool have work to do dominik szoboszlai&#x27;s injury-time penalty rescues a point at the start of the andoni iraola era - but liverpool need to improve after below-par display.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/articles/cdrvr73egnlo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Relief for Iraola but Liverpool have work to do</a></h2>
+          <p class="summary">Dominik Szoboszlai&#x27;s injury-time penalty rescues a point at the start of the Andoni Iraola era - but Liverpool need to improve after below-par display.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/articles/cdrvr73egnlo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="3d21a415d49a"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="maresca&#x27;s man city reign begins with dramatic comeback against bournemouth two managers in charge of new clubs face off with manchester city under enzo maresca and bournemouth under marco rose, as the hosts stage a late comeback to kick the new premier league season off in dramatic fashion.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/videos/cpd7dp7zeqzo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Maresca&#x27;s Man City reign begins with dramatic comeback against Bournemouth</a></h2>
+          <p class="summary">Two managers in charge of new clubs face off with Manchester City under Enzo Maresca and Bournemouth under Marco Rose, as the hosts stage a late comeback to kick the new Premier League season off in dramatic fashion.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/videos/cpd7dp7zeqzo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="967635b2904c"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="late penalty for liverpool denies newcastle win szoboszlai rescues a point for liverpool, scoring a stoppage-time penalty to deny newcastle an opening game victory at st james&#x27; park in the premier league.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/videos/c36d6lxx36eo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Late penalty for Liverpool denies Newcastle win</a></h2>
+          <p class="summary">Szoboszlai rescues a point for Liverpool, scoring a stoppage-time penalty to deny Newcastle an opening game victory at St James&#x27; Park in the Premier League.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/videos/c36d6lxx36eo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="82617e94522f"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="&#x27;when you score at the end it tastes better&#x27; - iraola liverpool head coach andoni iraola reacts to his sides 2-2 draw against newcastle united on the opening weekend of the 2026-27 premier league season.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/videos/c4gvgj0w9j2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">&#x27;When you score at the end it tastes better&#x27; - Iraola</a></h2>
+          <p class="summary">Liverpool head coach Andoni Iraola reacts to his sides 2-2 draw against Newcastle United on the opening weekend of the 2026-27 Premier League season.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/videos/c4gvgj0w9j2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="e426d57ac86d"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="al-hilal open talks to sign arsenal winger martinelli saudi arabian club al-hilal open negotiations with arsenal over a move for brazil forward gabriel martinelli.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/articles/cgk4k444rmmo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Al-Hilal open talks to sign Arsenal winger Martinelli</a></h2>
+          <p class="summary">Saudi Arabian club Al-Hilal open negotiations with Arsenal over a move for Brazil forward Gabriel Martinelli.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/articles/cgk4k444rmmo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="39cb7de80336"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="manchester utd midfielder devaney joins hibs on loan manchester united teenager jacob devaney is joining hibernian on a season-long loan, with the edinburgh club holding an option to make the move permanent.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/articles/ce343p742v9o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Manchester Utd midfielder Devaney joins Hibs on loan</a></h2>
+          <p class="summary">Manchester United teenager Jacob Devaney is joining Hibernian on a season-long loan, with the Edinburgh club holding an option to make the move permanent.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/articles/ce343p742v9o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="d28668d9d8ed"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="‘call his agent’: emery feels watkins should explain absence from villa’s rout by brighton england forward is considering move to al-hilal ‘this question is for him … i answer only with silence’ unai emery did nothing to deny that ollie watkins had refused to play for aston villa in their sobering 4-0 defeat by brighton at the amex on sunday.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/23/unai-emery-feels-ollie-watkins-should-explain-absence-from-aston-villa-loss-brighton" target="_blank" rel="noopener">‘Call his agent’: Emery feels Watkins should explain absence from Villa’s rout by Brighton</a></h2>
+          <p class="summary">England forward is considering move to Al-Hilal ‘This question is for him … I answer only with silence’ Unai Emery did nothing to deny that Ollie Watkins had refused to play for Aston Villa in their sobering 4-0 defeat by Brighton at the Amex on Sunday.</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/23/unai-emery-feels-ollie-watkins-should-explain-absence-from-aston-villa-loss-brighton" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="7c25cd3b75d5"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="spurs latest: &#x27;marmoush loan deal with buy clause verbally agreed&#x27; ">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">Sky Sports - Transfer Centre</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/football/live-blog/12691/13025489/tottenham-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts" target="_blank" rel="noopener">Spurs latest: &#x27;Marmoush loan deal with buy clause verbally agreed&#x27;</a></h2>
+          
+          <a class="readmore" href="https://www.skysports.com/football/live-blog/12691/13025489/tottenham-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="c8fc2e011533"
+                 data-sport="Football"
+                 data-league="General"
+                 data-country=""
+                 data-search="hull city latest: tigers finalising deal for nice forward cho ">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill source">Sky Sports - Transfer Centre</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/football/live-blog/12691/13548674/hull-city-transfers-latest-news-rumours-and-gossip-live-updates-goals-and-highlights" target="_blank" rel="noopener">Hull City latest: Tigers finalising deal for Nice forward Cho</a></h2>
+          
+          <a class="readmore" href="https://www.skysports.com/football/live-blog/12691/13548674/hull-city-transfers-latest-news-rumours-and-gossip-live-updates-goals-and-highlights" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="4e6d78d5ec93"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="&#x27;ask him&#x27; - emery cryptic on watkins amid transfer interest unai emery gave a coy and cryptic response to questions about ollie watkins&#x27; absence from aston villa&#x27;s squad for their premier league defeat at brighton.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">Sky Sports - Transfer Centre</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/football/news/12691/13576353/ollie-watkins-transfer-news-aston-villa-boss-unai-emery-gives-cryptic-answer-when-asked-about-striker-amid-al-hilal-interest" target="_blank" rel="noopener">&#x27;Ask him&#x27; - Emery cryptic on Watkins amid transfer interest</a></h2>
+          <p class="summary">Unai Emery gave a coy and cryptic response to questions about Ollie Watkins&#x27; absence from Aston Villa&#x27;s squad for their Premier League defeat at Brighton.</p>
+          <a class="readmore" href="https://www.skysports.com/football/news/12691/13576353/ollie-watkins-transfer-news-aston-villa-boss-unai-emery-gives-cryptic-answer-when-asked-about-striker-amid-al-hilal-interest" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="d97202b23b58"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="maresca concedes manchester city ‘a work in progress’ after hair-raising escape gvardiol’s stoppage-time strike gives city points ‘i’m looking for solutions. when you win games it helps’ enzo maresca said manchester city remain a “work in progress” after sunday’s last-gasp win over bournemouth at the etihad stadium.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/23/enzo-maresca-concedes-manchester-city-work-in-progress-bournemouth" target="_blank" rel="noopener">Maresca concedes Manchester City ‘a work in progress’ after hair-raising escape</a></h2>
+          <p class="summary">Gvardiol’s stoppage-time strike gives City points ‘I’m looking for solutions. When you win games it helps’ Enzo Maresca said Manchester City remain a “work in progress” after Sunday’s last-gasp win over Bournemouth at the Etihad Stadium.</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/23/enzo-maresca-concedes-manchester-city-work-in-progress-bournemouth" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="d06c2ca783d1"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="aston villa &#x27;must accept everything&#x27; - emery after brighton thrashing aston villa manager unai emery reacts to a difficult opening day after a thrashing at the hands of brighton, having conceding four goals in the first half.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/videos/c78g8y8vxpmo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Aston Villa &#x27;must accept everything&#x27; - Emery after Brighton thrashing</a></h2>
+          <p class="summary">Aston Villa manager Unai Emery reacts to a difficult opening day after a thrashing at the hands of Brighton, having conceding four goals in the first half.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/videos/c78g8y8vxpmo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="474deec49311"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="man city latest: newcastle closing in on nico move ">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">Sky Sports - Transfer Centre</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/football/live-blog/12691/13025499/man-city-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts" target="_blank" rel="noopener">Man City latest: Newcastle closing in on Nico move</a></h2>
+          
+          <a class="readmore" href="https://www.skysports.com/football/live-blog/12691/13025499/man-city-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="ce1f260d43a1"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="man city &#x27;completely deserved to win&#x27; - maresca enzo maresca marks his first premier league game as manchester city manager with a dramatic late comeback against bournemouth, making a winning start to the 2026–27 season.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/videos/c4gkgy8ljqvo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Man City &#x27;completely deserved to win&#x27; - Maresca</a></h2>
+          <p class="summary">Enzo Maresca marks his first Premier League game as Manchester City manager with a dramatic late comeback against Bournemouth, making a winning start to the 2026–27 season.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/videos/c4gkgy8ljqvo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="d8b502e1eda1"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="hull punished united defence in victory but carrick’s attack is bigger area of concern | andrew beasley manchester united again struggled against a back five as the promoted hosts exploited a set-piece weakness hull scored nine league goals from set plays last season, the joint-fewest in the championship.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/23/hull-punish-manchester-united-defence-michael-carrick-attack-bigger-concern" target="_blank" rel="noopener">Hull punished United defence in victory but Carrick’s attack is bigger area of concern | Andrew Beasley</a></h2>
+          <p class="summary">Manchester United again struggled against a back five as the promoted hosts exploited a set-piece weakness Hull scored nine league goals from set plays last season, the joint-fewest in the Championship.</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/23/hull-punish-manchester-united-defence-michael-carrick-attack-bigger-concern" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="b906abc3b1c2"
+                 data-sport="Football"
+                 data-league="General"
+                 data-country=""
+                 data-search="west brom surge back to floor flemming-less burnley amid transfer speculation west brom’s head coach, james morrison, insisted his side must “stay humble” after isaac price inspired them to a 3-1 comeback win against promotion favourites burnley in the championship at the hawthorns.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/23/west-brom-burnley-championship-match-report" target="_blank" rel="noopener">West Brom surge back to floor Flemming-less Burnley amid transfer speculation</a></h2>
+          <p class="summary">West Brom’s head coach, James Morrison, insisted his side must “stay humble” after Isaac Price inspired them to a 3-1 comeback win against promotion favourites Burnley in the Championship at the Hawthorns.</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/23/west-brom-burnley-championship-match-report" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="7070d4854ba2"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="man city agree record-breaking deal with lille to sign bouaddi manchester city have agreed a deal with lille for morocco international midfielder ayyoub bouaddi worth up to £86m (€100m).">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">Sky Sports - Transfer Centre</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/football/news/12691/13576242/ayyoub-bouaddi-transfer-manchester-city-reach-agreement-with-lille-to-sign-18-year-old-morocco-midfielder" target="_blank" rel="noopener">Man City agree record-breaking deal with Lille to sign Bouaddi</a></h2>
+          <p class="summary">Manchester City have agreed a deal with Lille for Morocco international midfielder Ayyoub Bouaddi worth up to £86m (€100m).</p>
+          <a class="readmore" href="https://www.skysports.com/football/news/12691/13576242/ayyoub-bouaddi-transfer-manchester-city-reach-agreement-with-lille-to-sign-18-year-old-morocco-midfielder" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="df027b7f567b"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="the maths whizz turned £86m teenage star heading to man city manchester city have agreed a deal in principle with lille to sign midfielder ayyoub bouaddi - what makes him such a highly rated talent?">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/articles/cwylg0kp5lwo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">The maths whizz turned £86m teenage star heading to Man City</a></h2>
+          <p class="summary">Manchester City have agreed a deal in principle with Lille to sign midfielder Ayyoub Bouaddi - what makes him such a highly rated talent?</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/articles/cwylg0kp5lwo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="8eda12ddcb41"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="manchester city agree deal worth up to €100m for lille’s ayyoub bouaddi signing will take city’s window spending to nearly £200m moroccan stood down from lille’s game against angers manchester city have agreed a deal with lille worth €95m (£81.4m) plus €5m in potential add-ons for ayyoub bouaddi, with the morocco midfielder’s arri…">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/23/manchester-city-agree-deal-lille-ayyoub-bouaddi-transfer" target="_blank" rel="noopener">Manchester City agree deal worth up to €100m for Lille’s Ayyoub Bouaddi</a></h2>
+          <p class="summary">Signing will take City’s window spending to nearly £200m Moroccan stood down from Lille’s game against Angers Manchester City have agreed a deal with Lille worth €95m (£81.4m) plus €5m in potential add-ons for Ayyoub Bouaddi, with the Morocco midfielder’s arri…</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/23/manchester-city-agree-deal-lille-ayyoub-bouaddi-transfer" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="0930d5809989"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="chelsea latest: essugo available for loan with pl clubs interested ">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">Sky Sports - Transfer Centre</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/football/live-blog/12691/13025497/chelsea-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts" target="_blank" rel="noopener">Chelsea latest: Essugo available for loan with PL clubs interested</a></h2>
+          
+          <a class="readmore" href="https://www.skysports.com/football/live-blog/12691/13025497/chelsea-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="5e6a9b780744"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="mateta’s palace dispute deepens after losing appeals to end contract early striker wants move and said final year of deal was invalid 29-year-old took his case to tribunal and fifa but lost jean-philippe mateta is in dispute with crystal palace over the final year of his contract but failed in an attempt to have it ruled invalid by a…">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/23/jean-philippe-mateta-dispute-crystal-palace-contract-transfer-window" target="_blank" rel="noopener">Mateta’s Palace dispute deepens after losing appeals to end contract early</a></h2>
+          <p class="summary">Striker wants move and said final year of deal was invalid 29-year-old took his case to tribunal and Fifa but lost Jean-Philippe Mateta is in dispute with Crystal Palace over the final year of his contract but failed in an attempt to have it ruled invalid by a…</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/23/jean-philippe-mateta-dispute-crystal-palace-contract-transfer-window" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="8a8648453fe1"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="&#x27;it hurts&#x27; - alexander-arnold reveals he still receives abuse after liverpool exit trent alexander-arnold says he still receives abuse from liverpool fans online after leaving anfield for real madrid 14 months ago.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/articles/cqjxj2zz77ro?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">&#x27;It hurts&#x27; - Alexander-Arnold reveals he still receives abuse after Liverpool exit</a></h2>
+          <p class="summary">Trent Alexander-Arnold says he still receives abuse from Liverpool fans online after leaving Anfield for Real Madrid 14 months ago.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/articles/cqjxj2zz77ro?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="1cebb4601834"
+                 data-sport="Football"
+                 data-league="General"
+                 data-country=""
+                 data-search="&#x27;it&#x27;s not doom and gloom just yet&#x27; - what is going on at morton? it&#x27;s been a rocky start to the season for morton with seven straight defeats, while the fans&#x27; group running the championship club are dealing with a shortfall in funding.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/articles/crl7l3yx0g9o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">&#x27;It&#x27;s not doom and gloom just yet&#x27; - what is going on at Morton?</a></h2>
+          <p class="summary">It&#x27;s been a rocky start to the season for Morton with seven straight defeats, while the fans&#x27; group running the Championship club are dealing with a shortfall in funding.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/articles/crl7l3yx0g9o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="c72db1189256"
+                 data-sport="Rugby"
+                 data-league="South Africa"
+                 data-country="South Africa"
+                 data-search="rassie erasmus dishes out blunt springboks admission as football giants plot prem deal the latest rugby stories making headlines on sunday, august 23.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport rugby">Rugby</span> <span class="pill league">South Africa</span> <span class="pill source">WalesOnline Rugby</span>
             <span class="date">Sun 23 Aug</span>
           </div>
           <h2><a href="https://www.walesonline.co.uk/sport/rugby/rugby-news/rassie-erasmus-dishes-out-blunt-34502595" target="_blank" rel="noopener">Rassie Erasmus dishes out blunt Springboks admission as football giants plot PREM deal</a></h2>
@@ -203,10 +889,29 @@
           <a class="readmore" href="https://www.walesonline.co.uk/sport/rugby/rugby-news/rassie-erasmus-dishes-out-blunt-34502595" target="_blank" rel="noopener">Read full story &rarr;</a>
         </article>
 
-        <article class="card">
+        <article class="card" data-id="19032f6e1875"
+                 data-sport="Rugby"
+                 data-league="Wales"
+                 data-country="Wales"
+                 data-search="wales pushing the pain barrier in bid to improve bbc sport spends a day in wales&#x27; pre-season camp, watching players put through their paces ahead of the new wxv global series.">
+          <span class="new-badge" hidden>NEW</span>
           <div class="meta">
-            <span class="pill league">South Africa</span>
-            <span class="pill source">RugbyPass</span>
+            <span class="pill sport rugby">Rugby</span> <span class="pill league">Wales</span> <span class="pill source">BBC Sport - Rugby Union</span>
+            <span class="date">Sun 23 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/rugby-union/articles/cqx7n5gw0wxo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Wales pushing the pain barrier in bid to improve</a></h2>
+          <p class="summary">BBC Sport spends a day in Wales&#x27; pre-season camp, watching players put through their paces ahead of the new WXV Global Series.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/rugby-union/articles/cqx7n5gw0wxo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="48eb83d32f5f"
+                 data-sport="Rugby"
+                 data-league="South Africa"
+                 data-country="South Africa"
+                 data-search="&#x27;100% legal&#x27;: the all blacks tactic that surprised rassie erasmus springboks head coach rassie erasmus was left surprised by the unexpected defensive tactic by the all blacks in the 33-16 loss in the first test.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport rugby">Rugby</span> <span class="pill league">South Africa</span> <span class="pill source">RugbyPass</span>
             <span class="date">Sun 23 Aug</span>
           </div>
           <h2><a href="https://www.rugbypass.com/news/100-legal-the-all-blacks-tactic-that-surprised-rassie-erasmus/" target="_blank" rel="noopener">&#x27;100% legal&#x27;: The All Blacks tactic that surprised Rassie Erasmus</a></h2>
@@ -214,10 +919,29 @@
           <a class="readmore" href="https://www.rugbypass.com/news/100-legal-the-all-blacks-tactic-that-surprised-rassie-erasmus/" target="_blank" rel="noopener">Read full story &rarr;</a>
         </article>
 
-        <article class="card">
+        <article class="card" data-id="600c59c99b2e"
+                 data-sport="Football"
+                 data-league="La Liga"
+                 data-country="Spain"
+                 data-search="josé mourinho marks real madrid return with late drama and touch of humility the old master is back at madrid as he begins with celebrations, frustrations and relief in a 2-1 win at espanyol josé mourinho says he is calmer now so when the rest of the bench emptied, sprinting down the touchline to celebrate the 90th-minute goal that fin…">
+          <span class="new-badge" hidden>NEW</span>
           <div class="meta">
-            <span class="pill league">South Africa</span>
-            <span class="pill source">RugbyPass</span>
+            <span class="pill sport football">Football</span> <span class="pill league">La Liga</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Sat 22 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/23/jose-mourinho-real-madrid-romance-espanyol-la-liga" target="_blank" rel="noopener">José Mourinho marks Real Madrid return with late drama and touch of humility</a></h2>
+          <p class="summary">The old master is back at Madrid as he begins with celebrations, frustrations and relief in a 2-1 win at Espanyol José Mourinho says he is calmer now so when the rest of the bench emptied, sprinting down the touchline to celebrate the 90th-minute goal that fin…</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/23/jose-mourinho-real-madrid-romance-espanyol-la-liga" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="4f7e21379a6a"
+                 data-sport="Rugby"
+                 data-league="South Africa"
+                 data-country="South Africa"
+                 data-search="damian mckenzie: all blacks won waiting game of ellis park altitude all blacks head coach dave rennie urged patience and trust in the game plan during the halftime break at ellis park on saturday night, knowing the altitude and pace of the game would eventually take a toll on the giant springbok pack.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport rugby">Rugby</span> <span class="pill league">South Africa</span> <span class="pill source">RugbyPass</span>
             <span class="date">Sat 22 Aug</span>
           </div>
           <h2><a href="https://www.rugbypass.com/news/damian-mckenzie/" target="_blank" rel="noopener">Damian McKenzie: All Blacks won waiting game of Ellis Park altitude</a></h2>
@@ -225,10 +949,74 @@
           <a class="readmore" href="https://www.rugbypass.com/news/damian-mckenzie/" target="_blank" rel="noopener">Read full story &rarr;</a>
         </article>
 
-        <article class="card">
+        <article class="card" data-id="26ceb2822c44"
+                 data-sport="Football"
+                 data-league="General"
+                 data-country=""
+                 data-search="tote bags &amp; derby wins - how pressley has defied dundee expectations steven pressley says he is &quot;immensely proud&quot; of his dundee players as the head coach&#x27;s redemption arc continues with another derby victory.">
+          <span class="new-badge" hidden>NEW</span>
           <div class="meta">
-            <span class="pill league">Wales</span>
-            <span class="pill source">WalesOnline Rugby</span>
+            <span class="pill sport football">Football</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Sat 22 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/articles/c86n6j1x36zo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Tote bags &amp; derby wins - how Pressley has defied Dundee expectations</a></h2>
+          <p class="summary">Steven Pressley says he is &quot;immensely proud&quot; of his Dundee players as the head coach&#x27;s redemption arc continues with another derby victory.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/articles/c86n6j1x36zo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="c40fb3b00679"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="de zerbi learns cash alone cannot fix spurs&#x27; losing mentality spurs head coach roberto de zerbi discovers cash is no cure for a losing mentality as they crash to a heavy defeat at brentford, says chief football writer phil mcnulty.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Sat 22 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/articles/cd696j44jqyo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">De Zerbi learns cash alone cannot fix Spurs&#x27; losing mentality</a></h2>
+          <p class="summary">Spurs head coach Roberto De Zerbi discovers cash is no cure for a losing mentality as they crash to a heavy defeat at Brentford, says chief football writer Phil McNulty.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/articles/cd696j44jqyo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="cf83042fbf79"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="meet the new spurs, same as the old spurs despite big summer spending | billy munday canny brentford show it will take more than a few new players to restore any sense of stability to tottenham this was supposed to be new spurs . daniel levy, such a magnet for fan apathy, has been sidelined.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Sat 22 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/22/meet-the-new-spurs-same-as-the-old-spurs" target="_blank" rel="noopener">Meet the new Spurs, same as the old Spurs despite big summer spending | Billy Munday</a></h2>
+          <p class="summary">Canny Brentford show it will take more than a few new players to restore any sense of stability to Tottenham This was supposed to be New Spurs . Daniel Levy, such a magnet for fan apathy, has been sidelined.</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/22/meet-the-new-spurs-same-as-the-old-spurs" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="c25366705ae3"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="mateta claims final year of palace deal is invalid jean-philippe mateta is challenging the validity of the final 10 months on his crystal palace contract.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Sat 22 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/articles/cdx7x90dxywo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Mateta claims final year of Palace deal is invalid</a></h2>
+          <p class="summary">Jean-Philippe Mateta is challenging the validity of the final 10 months on his Crystal Palace contract.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/articles/cdx7x90dxywo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="0396c91851ad"
+                 data-sport="Rugby"
+                 data-league="Wales"
+                 data-country="Wales"
+                 data-search="welsh club consider stunning move to bring wales star home ahead of world cup the 32-year-old is heading into his fourth year with grenoble in france">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport rugby">Rugby</span> <span class="pill league">Wales</span> <span class="pill source">WalesOnline Rugby</span>
             <span class="date">Sat 22 Aug</span>
           </div>
           <h2><a href="https://www.walesonline.co.uk/sport/rugby/rugby-news/welsh-club-consider-stunning-move-34501117" target="_blank" rel="noopener">Welsh club consider stunning move to bring Wales star home ahead of World Cup</a></h2>
@@ -236,10 +1024,14 @@
           <a class="readmore" href="https://www.walesonline.co.uk/sport/rugby/rugby-news/welsh-club-consider-stunning-move-34501117" target="_blank" rel="noopener">Read full story &rarr;</a>
         </article>
 
-        <article class="card">
+        <article class="card" data-id="be790ede139b"
+                 data-sport="Rugby"
+                 data-league="Premiership"
+                 data-country="England"
+                 data-search="leicester sign tonga hooker moli prem rugby side leicester tigers sign new zealand-born tonga international hooker sam moli.">
+          <span class="new-badge" hidden>NEW</span>
           <div class="meta">
-            <span class="pill league">Premiership</span>
-            <span class="pill source">BBC Sport – Rugby Union</span>
+            <span class="pill sport rugby">Rugby</span> <span class="pill league">Premiership</span> <span class="pill source">BBC Sport - Rugby Union</span>
             <span class="date">Sat 22 Aug</span>
           </div>
           <h2><a href="https://www.bbc.co.uk/sport/rugby-union/articles/c9989vmgz48o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Leicester sign Tonga hooker Moli</a></h2>
@@ -247,10 +1039,14 @@
           <a class="readmore" href="https://www.bbc.co.uk/sport/rugby-union/articles/c9989vmgz48o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
         </article>
 
-        <article class="card">
+        <article class="card" data-id="e5140237df91"
+                 data-sport="Rugby"
+                 data-league="Wales"
+                 data-country="Wales"
+                 data-search="fissler confidential: ospreys eye up 6&#x27;9 ex-waratahs lock all blacks skipper ardie savea could emerge as a surprise, ambitious target for a cross-code switch to the nrl expansion outfit png chiefs ahead of their entry into the competition in 2028.">
+          <span class="new-badge" hidden>NEW</span>
           <div class="meta">
-            <span class="pill league">New Zealand</span>
-            <span class="pill source">RugbyPass</span>
+            <span class="pill sport rugby">Rugby</span> <span class="pill league">Wales</span> <span class="pill source">RugbyPass</span>
             <span class="date">Sat 22 Aug</span>
           </div>
           <h2><a href="https://www.rugbypass.com/news/fissler-confidential-left-field-bid-to-target-ardie-savea/" target="_blank" rel="noopener">Fissler Confidential: Ospreys eye up 6&#x27;9 ex-Waratahs lock</a></h2>
@@ -258,10 +1054,29 @@
           <a class="readmore" href="https://www.rugbypass.com/news/fissler-confidential-left-field-bid-to-target-ardie-savea/" target="_blank" rel="noopener">Read full story &rarr;</a>
         </article>
 
-        <article class="card">
+        <article class="card" data-id="aabe71137b81"
+                 data-sport="Rugby"
+                 data-league="General"
+                 data-country=""
+                 data-search="jeremy guscott makes feelings clear on henry pollock&#x27;s antics amid £1m claim jeremy guscott has backed henry pollock to start for england but questioned the gifted star’s sportsmanship over his celebrations">
+          <span class="new-badge" hidden>NEW</span>
           <div class="meta">
-            <span class="pill league">New Zealand</span>
-            <span class="pill source">RugbyPass</span>
+            <span class="pill sport rugby">Rugby</span> <span class="pill source">WalesOnline Rugby</span>
+            <span class="date">Sat 22 Aug</span>
+          </div>
+          <h2><a href="https://www.walesonline.co.uk/sport/rugby/rugby-news/jeremy-guscott-makes-feelings-clear-34500735" target="_blank" rel="noopener">Jeremy Guscott makes feelings clear on Henry Pollock&#x27;s antics amid £1m claim</a></h2>
+          <p class="summary">Jeremy Guscott has backed Henry Pollock to start for England but questioned the gifted star’s sportsmanship over his celebrations</p>
+          <a class="readmore" href="https://www.walesonline.co.uk/sport/rugby/rugby-news/jeremy-guscott-makes-feelings-clear-34500735" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="495fb83409de"
+                 data-sport="Rugby"
+                 data-league="New Zealand"
+                 data-country="New Zealand"
+                 data-search="all blacks forced into late change ahead of game one vs boks the change is a straight swap, meaning the starting loose forward trio of tupou vaa&#x27;i, luke jacobson and ardie savea will remain in place, and parker will join peter lakai on the bench.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport rugby">Rugby</span> <span class="pill league">New Zealand</span> <span class="pill source">RugbyPass</span>
             <span class="date">Sat 22 Aug</span>
           </div>
           <h2><a href="https://www.rugbypass.com/news/all-blacks-forced-into-late-change-ahead-of-game-one-vs-boks/" target="_blank" rel="noopener">All Blacks forced into late change ahead of game one vs Boks</a></h2>
@@ -269,21 +1084,164 @@
           <a class="readmore" href="https://www.rugbypass.com/news/all-blacks-forced-into-late-change-ahead-of-game-one-vs-boks/" target="_blank" rel="noopener">Read full story &rarr;</a>
         </article>
 
-        <article class="card">
+        <article class="card" data-id="c113470c2a98"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="papers: atletico madrid ready to sell alvarez to arsenal the top stories and transfer rumours from saturday&#x27;s newspapers...">
+          <span class="new-badge" hidden>NEW</span>
           <div class="meta">
-            <span class="pill league">New Zealand</span>
-            <span class="pill source">SMH – Rugby Union</span>
-            <span class="date">Sat 22 Aug</span>
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">Sky Sports - Transfer Centre</span>
+            <span class="date">Fri 21 Aug</span>
           </div>
-          <h2><a href="https://www.smh.com.au/sport/rugby-union/he-s-a-world-class-operator-how-the-cheika-deal-to-return-to-the-waratahs-was-done-20260820-p60q5a.html?ref=rss&amp;utm_medium=rss&amp;utm_source=rss_sport_rugby-union" target="_blank" rel="noopener">‘He’s a world-class operator’: How the Cheika deal to return to the Waratahs was done</a></h2>
-          <p class="summary">Michael Cheika may end up only leading the Waratahs for one season, but that didn’t deter Rugby Australia from bringing back the only man to win a Super Rugby title with the franchise.</p>
-          <a class="readmore" href="https://www.smh.com.au/sport/rugby-union/he-s-a-world-class-operator-how-the-cheika-deal-to-return-to-the-waratahs-was-done-20260820-p60q5a.html?ref=rss&amp;utm_medium=rss&amp;utm_source=rss_sport_rugby-union" target="_blank" rel="noopener">Read full story &rarr;</a>
+          <h2><a href="https://www.skysports.com/football/news/12691/13575656/arsenal-transfer-news-atletico-madrid-finally-shift-julian-alvarez-position-and-now-willing-to-sell-striker-to-the-gunners-paper-talk" target="_blank" rel="noopener">Papers: Atletico Madrid ready to sell Alvarez to Arsenal</a></h2>
+          <p class="summary">The top stories and transfer rumours from Saturday&#x27;s newspapers...</p>
+          <a class="readmore" href="https://www.skysports.com/football/news/12691/13575656/arsenal-transfer-news-atletico-madrid-finally-shift-julian-alvarez-position-and-now-willing-to-sell-striker-to-the-gunners-paper-talk" target="_blank" rel="noopener">Read full story &rarr;</a>
         </article>
 
-        <article class="card">
+        <article class="card" data-id="a210999fa4eb"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="&#x27;a massive 10 days&#x27; - neville tells arsenal to get alvarez before deadline defending premier league champions arsenal would become champions league winners if they land julian alvarez in the final days of the transfer window, says gary neville.">
+          <span class="new-badge" hidden>NEW</span>
           <div class="meta">
-            <span class="pill league">Premiership</span>
-            <span class="pill source">RugbyPass</span>
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">Sky Sports - Transfer Centre</span>
+            <span class="date">Fri 21 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/football/news/12691/13575645/arsenal-transfer-news-julian-alvarez-would-add-magic-to-gunners-frontline-says-gary-neville-as-he-urges-them-to-sign-atletico-madrid-striker" target="_blank" rel="noopener">&#x27;A massive 10 days&#x27; - Neville tells Arsenal to get Alvarez before deadline</a></h2>
+          <p class="summary">Defending Premier League champions Arsenal would become Champions League winners if they land Julian Alvarez in the final days of the transfer window, says Gary Neville.</p>
+          <a class="readmore" href="https://www.skysports.com/football/news/12691/13575645/arsenal-transfer-news-julian-alvarez-would-add-magic-to-gunners-frontline-says-gary-neville-as-he-urges-them-to-sign-atletico-madrid-striker" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="5acfafe6fb61"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="martin ødegaard resumes his role as arsenal’s smoothing agent and pass master | barney ronay his goal was like something from it’s a knockout, but the arsenal captain showed signs of recovery from an injury-wrecked campaign we’re back, baby. welcome to the content zone. and yes, we did actually go away for a bit. seriously. check back. we really did.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Fri 21 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/21/martin-degaard-of-old-is-back-with-the-pass-that-makes-the-pass" target="_blank" rel="noopener">Martin Ødegaard resumes his role as Arsenal’s smoothing agent and pass master | Barney Ronay</a></h2>
+          <p class="summary">His goal was like something from It’s A Knockout, but the Arsenal captain showed signs of recovery from an injury-wrecked campaign We’re back, baby. Welcome to the content zone. And yes, we did actually go away for a bit. Seriously. Check back. We really did.</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/21/martin-degaard-of-old-is-back-with-the-pass-that-makes-the-pass" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="66e5725f5af7"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="manchester united agree £65m deal for carlos baleba in midfield rebuild cameroon midfielder will join tielemans and santos signing takes united’s total summer spend to £148m manchester united have agreed a deal worth an initial £65m for carlos baleba and the brighton midfielder will have his medical this weekend in manchester.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Transfer Window</span>
+            <span class="date">Fri 21 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/21/manchester-united-continue-midfield-regeneration-with-carlos-baleba-deal" target="_blank" rel="noopener">Manchester United agree £65m deal for Carlos Baleba in midfield rebuild</a></h2>
+          <p class="summary">Cameroon midfielder will join Tielemans and Santos Signing takes United’s total summer spend to £148m Manchester United have agreed a deal worth an initial £65m for Carlos Baleba and the Brighton midfielder will have his medical this weekend in Manchester.</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/21/manchester-united-continue-midfield-regeneration-with-carlos-baleba-deal" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="ce319d54c6f4"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="inter milan sign jones from liverpool inter milan have confirmed the signing of curtis jones in a £30m (€35m) deal from liverpool.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">Sky Sports - Transfer Centre</span>
+            <span class="date">Fri 21 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/football/news/12691/13575215/curtis-jones-transfer-news-inter-milan-sign-midfielder-from-liverpool-in-30m-deal-with-sell-on-clause-included" target="_blank" rel="noopener">Inter Milan sign Jones from Liverpool</a></h2>
+          <p class="summary">Inter Milan have confirmed the signing of Curtis Jones in a £30m (€35m) deal from Liverpool.</p>
+          <a class="readmore" href="https://www.skysports.com/football/news/12691/13575215/curtis-jones-transfer-news-inter-milan-sign-midfielder-from-liverpool-in-30m-deal-with-sell-on-clause-included" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="4a5282cff462"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="brighton reject £60m liverpool bid for minteh brighton have rejected a £60m bid from liverpool for winger yankuba minteh.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">Sky Sports - Transfer Centre</span>
+            <span class="date">Fri 21 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/football/news/12691/13575558/yankuba-minteh-transfer-news-brighton-reject-liverpool-bid-of-60m-for-winger" target="_blank" rel="noopener">Brighton reject £60m Liverpool bid for Minteh</a></h2>
+          <p class="summary">Brighton have rejected a £60m bid from Liverpool for winger Yankuba Minteh.</p>
+          <a class="readmore" href="https://www.skysports.com/football/news/12691/13575558/yankuba-minteh-transfer-news-brighton-reject-liverpool-bid-of-60m-for-winger" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="5c184b8ef53a"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="all done deals in august 2026 check out the significant signings and departures in the premier league, scottish premiership, efl and women&#x27;s super league.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Fri 21 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/articles/c9v4d2z2p7yo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">All done deals in August 2026</a></h2>
+          <p class="summary">Check out the significant signings and departures in the Premier League, Scottish Premiership, EFL and Women&#x27;s Super League.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/articles/c9v4d2z2p7yo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="ba3fa53c0ad7"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="&#x27;i&#x27;m here to win&#x27; - arsenal announce £55m konsa deal arsenal have completed the £55m deal to sign defender ezri konsa from aston villa.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">Sky Sports - Transfer Centre</span>
+            <span class="date">Fri 21 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/football/news/12691/13574990/ezri-konsa-arsenal-complete-51m-deal-for-aston-villa-and-england-defender" target="_blank" rel="noopener">&#x27;I&#x27;m here to win&#x27; - Arsenal announce £55m Konsa deal</a></h2>
+          <p class="summary">Arsenal have completed the £55m deal to sign defender Ezri Konsa from Aston Villa.</p>
+          <a class="readmore" href="https://www.skysports.com/football/news/12691/13574990/ezri-konsa-arsenal-complete-51m-deal-for-aston-villa-and-england-defender" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="6e118cdb3132"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="spurs agree £85m savinho deal and close in on marmoush tottenham are closing in on signing manchester city pair savinho and omar marmoush.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">Sky Sports - Transfer Centre</span>
+            <span class="date">Fri 21 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/football/news/12691/13575264/savinho-transfer-tottenham-agree-85m-deal-to-sign-man-city-winger-as-spurs-close-in-on-omar-marmoush" target="_blank" rel="noopener">Spurs agree £85m Savinho deal and close in on Marmoush</a></h2>
+          <p class="summary">Tottenham are closing in on signing Manchester City pair Savinho and Omar Marmoush.</p>
+          <a class="readmore" href="https://www.skysports.com/football/news/12691/13575264/savinho-transfer-tottenham-agree-85m-deal-to-sign-man-city-winger-as-spurs-close-in-on-omar-marmoush" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="671bff502f5e"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="villa expected to make jackson move if watkins sold to al hilal aston villa are expected to make a move for nicolas jackson if they sell ollie watkins to al hilal.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">Sky Sports - Transfer Centre</span>
+            <span class="date">Fri 21 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/football/news/12691/13575424/aston-villa-transfer-news-unai-emerys-side-expected-to-make-nicolas-jackson-approach-if-ollie-watkins-sold-to-al-hilal" target="_blank" rel="noopener">Villa expected to make Jackson move if Watkins sold to Al Hilal</a></h2>
+          <p class="summary">Aston Villa are expected to make a move for Nicolas Jackson if they sell Ollie Watkins to Al Hilal.</p>
+          <a class="readmore" href="https://www.skysports.com/football/news/12691/13575424/aston-villa-transfer-news-unai-emerys-side-expected-to-make-nicolas-jackson-approach-if-ollie-watkins-sold-to-al-hilal" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="97c3ec78526c"
+                 data-sport="Rugby"
+                 data-league="Premiership"
+                 data-country="England"
+                 data-search="world cup-winning duo headline 13 international re-signings at exeter exeter chiefs have confirmed the re-signing of 13 internationals prior to the 2026/27 jaecoo premiership women&#x27;s rugby season.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport rugby">Rugby</span> <span class="pill league">Premiership</span> <span class="pill source">RugbyPass</span>
             <span class="date">Fri 21 Aug</span>
           </div>
           <h2><a href="https://www.rugbypass.com/news/world-cup-winning-duo-headline-13-international-re-signings-at-exeter/" target="_blank" rel="noopener">World Cup-winning duo headline 13 international re-signings at Exeter</a></h2>
@@ -291,10 +1249,14 @@
           <a class="readmore" href="https://www.rugbypass.com/news/world-cup-winning-duo-headline-13-international-re-signings-at-exeter/" target="_blank" rel="noopener">Read full story &rarr;</a>
         </article>
 
-        <article class="card">
+        <article class="card" data-id="1d195d2d618a"
+                 data-sport="Rugby"
+                 data-league="Wales"
+                 data-country="Wales"
+                 data-search="lightning record holder davey called up by wales scrum-half megan davey has been called up to wales&#x27; extended training squad for the upcoming wxv global series.">
+          <span class="new-badge" hidden>NEW</span>
           <div class="meta">
-            <span class="pill league">Wales</span>
-            <span class="pill source">BBC Sport – Welsh Rugby</span>
+            <span class="pill sport rugby">Rugby</span> <span class="pill league">Wales</span> <span class="pill source">BBC Sport - Welsh Rugby</span>
             <span class="date">Fri 21 Aug</span>
           </div>
           <h2><a href="https://www.bbc.co.uk/sport/rugby-union/articles/cly5wdzqw0zo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Lightning record holder Davey called up by Wales</a></h2>
@@ -302,10 +1264,14 @@
           <a class="readmore" href="https://www.bbc.co.uk/sport/rugby-union/articles/cly5wdzqw0zo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
         </article>
 
-        <article class="card">
+        <article class="card" data-id="4036f5931d1e"
+                 data-sport="Rugby"
+                 data-league="Wales"
+                 data-country="Wales"
+                 data-search="uncapped loughborough centurion added to wales training squad loughborough lightning centurion megan davey has been added to sean lynn&#x27;s extended wales training squad for the wxv global series.">
+          <span class="new-badge" hidden>NEW</span>
           <div class="meta">
-            <span class="pill league">Wales</span>
-            <span class="pill source">RugbyPass</span>
+            <span class="pill sport rugby">Rugby</span> <span class="pill league">Wales</span> <span class="pill source">RugbyPass</span>
             <span class="date">Fri 21 Aug</span>
           </div>
           <h2><a href="https://www.rugbypass.com/news/uncapped-loughborough-centurion-added-to-wales-training-squad/" target="_blank" rel="noopener">Uncapped Loughborough centurion added to Wales training squad</a></h2>
@@ -313,10 +1279,44 @@
           <a class="readmore" href="https://www.rugbypass.com/news/uncapped-loughborough-centurion-added-to-wales-training-squad/" target="_blank" rel="noopener">Read full story &rarr;</a>
         </article>
 
-        <article class="card">
+        <article class="card" data-id="2b8aa263b3fd"
+                 data-sport="Football"
+                 data-league="International"
+                 data-country="International"
+                 data-search="england women u20s squad named amid boycott threat manager lydia bedford has named her england squad for the upcoming fifa u20s women&#x27;s world cup amid ongoing threat of a boycott from european nations.">
+          <span class="new-badge" hidden>NEW</span>
           <div class="meta">
-            <span class="pill league">South Africa</span>
-            <span class="pill source">The Guardian – Rugby Union</span>
+            <span class="pill sport football">Football</span> <span class="pill league">International</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Fri 21 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/articles/c2el8j10vl3o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">England Women U20s squad named amid boycott threat</a></h2>
+          <p class="summary">Manager Lydia Bedford has named her England squad for the upcoming Fifa U20s Women&#x27;s World Cup amid ongoing threat of a boycott from European nations.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/articles/c2el8j10vl3o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="39a774d8d5eb"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="aston villa’s rachel daly: ‘it’s given me more of a focus: club football is my one job’ former england striker on retiring from the lionesses, being a role model, and taking on chelsea in the wsl a year after taking up golf, rachel daly has already reached a handicap of 19.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Fri 21 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/21/aston-villa-rachel-daly-womens-super-league-england-lionesses" target="_blank" rel="noopener">Aston Villa’s Rachel Daly: ‘It’s given me more of a focus: club football is my one job’</a></h2>
+          <p class="summary">Former England striker on retiring from the Lionesses, being a role model, and taking on Chelsea in the WSL A year after taking up golf, Rachel Daly has already reached a handicap of 19.</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/21/aston-villa-rachel-daly-womens-super-league-england-lionesses" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="cc29d8684406"
+                 data-sport="Rugby"
+                 data-league="South Africa"
+                 data-country="South Africa"
+                 data-search="smoke and mirrors fill the vacuum as springboks and all blacks brace for battle south africa welcome new zealand for their greatest rivalry series with the suspicion that they plan on beating the tourists at their own game the problem with test weeks is that they can feel long.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport rugby">Rugby</span> <span class="pill league">South Africa</span> <span class="pill source">The Guardian - Rugby Union</span>
             <span class="date">Fri 21 Aug</span>
           </div>
           <h2><a href="https://www.theguardian.com/sport/2026/aug/21/springboks-all-blacks-south-africa-new-zealand-greatest-rivalry-rugby-union" target="_blank" rel="noopener">Smoke and mirrors fill the vacuum as Springboks and All Blacks brace for battle</a></h2>
@@ -324,10 +1324,44 @@
           <a class="readmore" href="https://www.theguardian.com/sport/2026/aug/21/springboks-all-blacks-south-africa-new-zealand-greatest-rivalry-rugby-union" target="_blank" rel="noopener">Read full story &rarr;</a>
         </article>
 
-        <article class="card">
+        <article class="card" data-id="80839b87b00c"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="crystal palace agree disasi loan and tell manchester city that wharton is not for sale centre-back to join from chelsea after acheampong snub wharton has three years left on current deal at palace crystal palace have agreed a deal with chelsea to sign axel disasi on loan and are expecting further interest in some of their key players in the fina…">
+          <span class="new-badge" hidden>NEW</span>
           <div class="meta">
-            
-            <span class="pill source">RugbyPass</span>
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Transfer Window</span>
+            <span class="date">Fri 21 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/21/crystal-palace-axel-disasi-loan-chelsea-manchester-city-adam-wharton-transfer-window-premier-league" target="_blank" rel="noopener">Crystal Palace agree Disasi loan and tell Manchester City that Wharton is not for sale</a></h2>
+          <p class="summary">Centre-back to join from Chelsea after Acheampong snub Wharton has three years left on current deal at Palace Crystal Palace have agreed a deal with Chelsea to sign Axel Disasi on loan and are expecting further interest in some of their key players in the fina…</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/21/crystal-palace-axel-disasi-loan-chelsea-manchester-city-adam-wharton-transfer-window-premier-league" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="64722037a414"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="premier league 2026-27 preview no 20: tottenham optimism abounds that de zerbi and new signings can lead to a big improvement after two 17th-place finishes guardian writers’ predicted position: 6th (nb: this is not necessarily john brewin’s prediction but the average of our writers’ tips) last season’s posi…">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Fri 21 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/21/premier-league-2026-27-preview-no-20-tottenham" target="_blank" rel="noopener">Premier League 2026-27 preview No 20: Tottenham</a></h2>
+          <p class="summary">Optimism abounds that De Zerbi and new signings can lead to a big improvement after two 17th-place finishes Guardian writers’ predicted position: 6th (NB: this is not necessarily John Brewin’s prediction but the average of our writers’ tips) Last season’s posi…</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/21/premier-league-2026-27-preview-no-20-tottenham" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="9d1bb510bd24"
+                 data-sport="Rugby"
+                 data-league="General"
+                 data-country=""
+                 data-search="&#x27;it&#x27;s exciting&#x27;: fijiana xv squad named for wxv global series challenger new fijiana xv head coach willie walker has named his wxv global series challenger squad that will travel to hong kong china next month.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport rugby">Rugby</span> <span class="pill source">RugbyPass</span>
             <span class="date">Fri 21 Aug</span>
           </div>
           <h2><a href="https://www.rugbypass.com/news/its-exciting-fijiana-xv-squad-named-for-wxv-global-series-challenger/" target="_blank" rel="noopener">&#x27;It&#x27;s exciting&#x27;: Fijiana XV squad named for WXV Global Series Challenger</a></h2>
@@ -335,10 +1369,179 @@
           <a class="readmore" href="https://www.rugbypass.com/news/its-exciting-fijiana-xv-squad-named-for-wxv-global-series-challenger/" target="_blank" rel="noopener">Read full story &rarr;</a>
         </article>
 
-        <article class="card">
+        <article class="card" data-id="1bba8c209b42"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="i missed being valued as a footballer - walti brighton midfielder lia walti said she &quot;missed the feeling of being valued as a footballer&quot; and craved a return to the women&#x27;s super league.">
+          <span class="new-badge" hidden>NEW</span>
           <div class="meta">
-            <span class="pill league">Premiership</span>
-            <span class="pill source">BBC Sport – Rugby Union</span>
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Fri 21 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/articles/cdrv86006r4o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">I missed being valued as a footballer - Walti</a></h2>
+          <p class="summary">Brighton midfielder Lia Walti said she &quot;missed the feeling of being valued as a footballer&quot; and craved a return to the Women&#x27;s Super League.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/articles/cdrv86006r4o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="1dac95689776"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="football transfer rumours: endrick to liverpool? arsenal to swap martinelli for yildiz? today’s fluff does not do sudoku since vinícius júnior signed a shiny new deal at real madrid, arsenal have been having to look elsewhere for a new winger. turkey’s and juventus’s kenan yildizm is of interest to mikel arteta and the gunners hierarchy.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Transfer Window</span>
+            <span class="date">Fri 21 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/21/football-transfer-rumours-endrick-to-liverpool-arsenal-to-swap-martinelli-for-yildiz" target="_blank" rel="noopener">Football transfer rumours: Endrick to Liverpool? Arsenal to swap Martinelli for Yildiz?</a></h2>
+          <p class="summary">Today’s fluff does not do Sudoku Since Vinícius Júnior signed a shiny new deal at Real Madrid, Arsenal have been having to look elsewhere for a new winger. Turkey’s and Juventus’s Kenan Yildizm is of interest to Mikel Arteta and the Gunners hierarchy.</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/21/football-transfer-rumours-endrick-to-liverpool-arsenal-to-swap-martinelli-for-yildiz" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="08dfa56b556a"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="manchester city set to sell savinho and omar marmoush to spurs for combined £160m enzo maresca confirms savinho asked to leave club marmoush has not done so but also likely to depart city enzo maresca has revealed savinho made clear his desire to leave manchester city on “day one” of his tenure but that omar marmoush has not asked to depart…">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Transfer Window</span>
+            <span class="date">Fri 21 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/21/tottenham-hotspur-close-on-deals-for-manchester-city-savinho-omar-marmoush" target="_blank" rel="noopener">Manchester City set to sell Savinho and Omar Marmoush to Spurs for combined £160m</a></h2>
+          <p class="summary">Enzo Maresca confirms Savinho asked to leave club Marmoush has not done so but also likely to depart City Enzo Maresca has revealed Savinho made clear his desire to leave Manchester City on “day one” of his tenure but that Omar Marmoush has not asked to depart…</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/21/tottenham-hotspur-close-on-deals-for-manchester-city-savinho-omar-marmoush" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="db288b245d4b"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="new rules, managers and pundits: what’s different this premier league season? a crackdown on time wasting, a record number of new people in charge, and some new faces on match of the day the 2026-27 premier league season kicks off on friday and while the familiar rivalries return, the english top flight has some alterations this campaig…">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Fri 21 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/21/new-rules-managers-pundits-premier-league-season-2026-2027" target="_blank" rel="noopener">New rules, managers and pundits: what’s different this Premier League season?</a></h2>
+          <p class="summary">A crackdown on time wasting, a record number of new people in charge, and some new faces on Match of the Day The 2026-27 Premier League season kicks off on Friday and while the familiar rivalries return, the English top flight has some alterations this campaig…</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/21/new-rules-managers-pundits-premier-league-season-2026-2027" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="bd68c8e20382"
+                 data-sport="Football"
+                 data-league="International"
+                 data-country="International"
+                 data-search="ronaldinho, 46, on mission of love and happiness – and maybe goals – at serie c’s ravenna brazilian legend pledges excitement at his unveiling for a comeback that is winning over initially disbelieving fans it seemed like a joke, a hoax, when at 10pm on 19 june, ravenna broke the news of ronaldinho’s signing .">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">International</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/20/ronaldinho-46-serie-c-ravenna-unveiling-comeback" target="_blank" rel="noopener">Ronaldinho, 46, on mission of love and happiness – and maybe goals – at Serie C’s Ravenna</a></h2>
+          <p class="summary">Brazilian legend pledges excitement at his unveiling for a comeback that is winning over initially disbelieving fans It seemed like a joke, a hoax, when at 10pm on 19 June, Ravenna broke the news of Ronaldinho’s signing .</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/20/ronaldinho-46-serie-c-ravenna-unveiling-comeback" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="7eaa184fb29e"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="premier league returns and arsenal sense opportunity with rivals in flux new managers galore suggest many of the usual suspects will struggle to dethrone the champions, but their own hunger could be the key mikel arteta wants to get his messaging absolutely right.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/20/premier-league-returns-arsenal-sense-opportunity" target="_blank" rel="noopener">Premier League returns and Arsenal sense opportunity with rivals in flux</a></h2>
+          <p class="summary">New managers galore suggest many of the usual suspects will struggle to dethrone the champions, but their own hunger could be the key Mikel Arteta wants to get his messaging absolutely right.</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/20/premier-league-returns-arsenal-sense-opportunity" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="bf147b37bcc9"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="football daily | the balogun affair and premier league’s battle with conspiracy theorists sign up now! sign up now! sign up now? sign up now! while football daily remains open to the idea that stanley kubrick directed the moon landings and the pentagon is hiding grey aliens in area 51, we have never had much truck with tinfoil hat-wearing conspirac…">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/20/the-balogun-affair-premier-league-referees-newsletter" target="_blank" rel="noopener">Football Daily | The Balogun affair and Premier League’s battle with conspiracy theorists</a></h2>
+          <p class="summary">Sign up now! Sign up now! Sign up now? Sign up now! While Football Daily remains open to the idea that Stanley Kubrick directed the moon landings and the Pentagon is hiding grey aliens in Area 51, we have never had much truck with tinfoil hat-wearing conspirac…</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/20/the-balogun-affair-premier-league-referees-newsletter" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="6d6547cd7ff5"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="liverpool see £50m bid for yankuba minteh rejected by brighton minteh targeted as replacement for mohamed salah winger sidelined after recovering from leg surgery liverpool have had a £50m bid for yankuba minteh rejected by brighton.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Transfer Window</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/20/liverpool-see-50m-bid-for-yankuba-minteh-rejected-by-brighton" target="_blank" rel="noopener">Liverpool see £50m bid for Yankuba Minteh rejected by Brighton</a></h2>
+          <p class="summary">Minteh targeted as replacement for Mohamed Salah Winger sidelined after recovering from leg surgery Liverpool have had a £50m bid for Yankuba Minteh rejected by Brighton.</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/20/liverpool-see-50m-bid-for-yankuba-minteh-rejected-by-brighton" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="8f0af1445f0c"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="‘enzo is a chelsea player,’ says alonso but doesn’t guarantee fernández’s future midfielder linked with £120m move to manchester city chelsea still interested in bournemouth’s alex scott xabi alonso has refused to offer any guarantee that chelsea will hold firm if manchester city try to sign enzo fernández.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Transfer Window</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/20/enzo-fernandez-chelsea-xabi-alonso-manchester-city-transfer" target="_blank" rel="noopener">‘Enzo is a Chelsea player,’ says Alonso but doesn’t guarantee Fernández’s future</a></h2>
+          <p class="summary">Midfielder linked with £120m move to Manchester City Chelsea still interested in Bournemouth’s Alex Scott Xabi Alonso has refused to offer any guarantee that Chelsea will hold firm if Manchester City try to sign Enzo Fernández.</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/20/enzo-fernandez-chelsea-xabi-alonso-manchester-city-transfer" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="afa8e04247dc"
+                 data-sport="Football"
+                 data-league="International"
+                 data-country="International"
+                 data-search="maracanã to host opening game and final at next year’s women’s world cup stadium has hosted two men’s world cup finals arena itaquera in são paulo will host 10 matches the maracanã in rio de janeiro will host the opening game and the final of next year’s women’s world cup.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">International</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/20/maracana-to-host-opening-game-and-final-at-next-years-womens-world-cup" target="_blank" rel="noopener">Maracanã to host opening game and final at next year’s Women’s World Cup</a></h2>
+          <p class="summary">Stadium has hosted two men’s World Cup finals Arena Itaquera in São Paulo will host 10 matches The Maracanã in Rio de Janeiro will host the opening game and the final of next year’s Women’s World Cup.</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/20/maracana-to-host-opening-game-and-final-at-next-years-womens-world-cup" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="69c66fe13527"
+                 data-sport="Rugby"
+                 data-league="New Zealand"
+                 data-country="New Zealand"
+                 data-search="maddison levi: wallaroos debut for explosive sevens star has new zealand on red alert | angus fontaine the code-hopping winger is one of the hottest properties in world rugby but says she feels ‘vulnerable’ ahead of her eagerly-anticipated first 15s test cap maddison levi is widely considered the most exciting rugby player in the country.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport rugby">Rugby</span> <span class="pill league">New Zealand</span> <span class="pill source">The Guardian - Rugby Union</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/sport/2026/aug/21/maddison-levi-wallaroos-debut-rugby-sevens-star" target="_blank" rel="noopener">Maddison Levi: Wallaroos debut for explosive sevens star has New Zealand on red alert | Angus Fontaine</a></h2>
+          <p class="summary">The code-hopping winger is one of the hottest properties in world rugby but says she feels ‘vulnerable’ ahead of her eagerly-anticipated first 15s Test cap Maddison Levi is widely considered the most exciting rugby player in the country.</p>
+          <a class="readmore" href="https://www.theguardian.com/sport/2026/aug/21/maddison-levi-wallaroos-debut-rugby-sevens-star" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="4e2847fbb96e"
+                 data-sport="Rugby"
+                 data-league="Premiership"
+                 data-country="England"
+                 data-search="exeter chiefs women promote bishop to head coach role premiership women&#x27;s rugby side exeter chiefs appoint assistant oli bishop as head coach to replace steve salvin.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport rugby">Rugby</span> <span class="pill league">Premiership</span> <span class="pill source">BBC Sport - Rugby Union</span>
             <span class="date">Thu 20 Aug</span>
           </div>
           <h2><a href="https://www.bbc.co.uk/sport/rugby-union/articles/c05q44de4lzo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Exeter Chiefs women promote Bishop to head coach role</a></h2>
@@ -346,10 +1549,44 @@
           <a class="readmore" href="https://www.bbc.co.uk/sport/rugby-union/articles/c05q44de4lzo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
         </article>
 
-        <article class="card">
+        <article class="card" data-id="95e4ef4261c6"
+                 data-sport="Football"
+                 data-league="General"
+                 data-country=""
+                 data-search="bbc women&#x27;s football weekly fridolina rolfo, lea schuller, julia zigiotti, dominique janssen, hanna lundkvist join jo">
+          <span class="new-badge" hidden>NEW</span>
           <div class="meta">
-            <span class="pill league">Wales</span>
-            <span class="pill source">BBC Sport – Welsh Rugby</span>
+            <span class="pill sport football">Football</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sounds/play/p0p5h7wh?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">BBC Women&#x27;s Football Weekly</a></h2>
+          <p class="summary">Fridolina Rolfo, Lea Schuller, Julia Zigiotti, Dominique Janssen, Hanna Lundkvist join Jo</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sounds/play/p0p5h7wh?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="5f72e76e40df"
+                 data-sport="Football"
+                 data-league="Serie A"
+                 data-country="Italy"
+                 data-search="can a managerial merry-go-round in serie a stop inter’s dominance? milan, napoli and atalanta all have new head coaches as italian football hopes to return to the spotlight and so, calcio’s “ third apocalypse ” has passed. a lot of italians enjoyed the world cup more than they expected.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Serie A</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/20/serie-a-preview-inter-milan-juventus-como-roma-napoli" target="_blank" rel="noopener">Can a managerial merry-go-round in Serie A stop Inter’s dominance?</a></h2>
+          <p class="summary">Milan, Napoli and Atalanta all have new head coaches as Italian football hopes to return to the spotlight And so, calcio’s “ third apocalypse ” has passed. A lot of Italians enjoyed the World Cup more than they expected.</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/20/serie-a-preview-inter-milan-juventus-como-roma-napoli" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="58a7e9e568b9"
+                 data-sport="Rugby"
+                 data-league="Wales"
+                 data-country="Wales"
+                 data-search="wales appoint leicester&#x27;s davies as kicking coach alex davies joins steve tandy&#x27;s wales management team as kicking coach after leaving leicester.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport rugby">Rugby</span> <span class="pill league">Wales</span> <span class="pill source">BBC Sport - Rugby Union</span>
             <span class="date">Thu 20 Aug</span>
           </div>
           <h2><a href="https://www.bbc.co.uk/sport/rugby-union/articles/cn4ne55n8zpo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Wales appoint Leicester&#x27;s Davies as kicking coach</a></h2>
@@ -357,10 +1594,209 @@
           <a class="readmore" href="https://www.bbc.co.uk/sport/rugby-union/articles/cn4ne55n8zpo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
         </article>
 
-        <article class="card">
+        <article class="card" data-id="93601ba881d3"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="premier league season preview: hull city to spurs | football weekly video max rushden is joined by barry glendenning, nicky bandini and jordan jarrett-bryan for the second of our premier league preview podcasts. continue reading...">
+          <span class="new-badge" hidden>NEW</span>
           <div class="meta">
-            <span class="pill league">Wales</span>
-            <span class="pill source">BBC Sport – Welsh Rugby</span>
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/video/2026/aug/20/premier-league-season-preview-hull-city-to-tottenham-football-weekly-video" target="_blank" rel="noopener">Premier League season preview: Hull City to Spurs | Football Weekly video</a></h2>
+          <p class="summary">Max Rushden is joined by Barry Glendenning, Nicky Bandini and Jordan Jarrett-Bryan for the second of our Premier League preview podcasts. Continue reading...</p>
+          <a class="readmore" href="https://www.theguardian.com/football/video/2026/aug/20/premier-league-season-preview-hull-city-to-tottenham-football-weekly-video" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="93746a9dd12c"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="football transfer rumours: newcastle to sign manchester city’s nico gonzález? today’s fluff awaits the rainbow a manchester city clearout is in the offing, which could aid newcastle’s search for a new central midfielder to replace the departed sandro tonali and bruno guimarães.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Transfer Window</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/20/football-transfer-rumours-newcastle-nico-gonzalez-manchester-united-aston-villa" target="_blank" rel="noopener">Football transfer rumours: Newcastle to sign Manchester City’s Nico González?</a></h2>
+          <p class="summary">Today’s fluff awaits the rainbow A Manchester City clearout is in the offing, which could aid Newcastle’s search for a new central midfielder to replace the departed Sandro Tonali and Bruno Guimarães.</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/20/football-transfer-rumours-newcastle-nico-gonzalez-manchester-united-aston-villa" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="fba44e9d82bc"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="frugal or foolish? manchester united may regret not backing carrick another left-back has been a priority all summer, but there seems to be no sign of one coming to old trafford after signing aaron wan-bissaka in 2019, manchester united’s pr machine boasted they had scouted 804 right-backs before landing on the crystal palace…">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Thu 20 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/20/manchester-united-may-regret-not-backing-michael-carrick" target="_blank" rel="noopener">Frugal or foolish? Manchester United may regret not backing Carrick</a></h2>
+          <p class="summary">Another left-back has been a priority all summer, but there seems to be no sign of one coming to Old Trafford After signing Aaron Wan-Bissaka in 2019, Manchester United’s PR machine boasted they had scouted 804 right-backs before landing on the Crystal Palace…</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/20/manchester-united-may-regret-not-backing-michael-carrick" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="f5a201157c12"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="‘a huge honour’: socceroos world cup star alessandro circati seals move to benfica defender completes transfer for reported fee of 20m euros ($33m) ten australian players have now made post-world cup moves young socceroo alessandro circati has become the latest australian international to be snapped up in a money-spinning european transfer,…">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/20/alessandro-circati-benfica-portugal-primeira-liga-transfer-news-move" target="_blank" rel="noopener">‘A huge honour’: Socceroos World Cup star Alessandro Circati seals move to Benfica</a></h2>
+          <p class="summary">Defender completes transfer for reported fee of 20m euros ($33m) Ten Australian players have now made post-World Cup moves Young Socceroo Alessandro Circati has become the latest Australian international to be snapped up in a money-spinning European transfer,…</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/20/alessandro-circati-benfica-portugal-primeira-liga-transfer-news-move" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="3fe3ba73a9c1"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="premier league 2026-27 preview no 17: newcastle after the departure of the manager and some of their best players, fans on tyneside are braced for a transitional season at best guardian writers’ predicted position: 17th (nb: this is not necessarily louise taylor’s prediction but the average of our writers’…">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/20/premier-league-2026-27-preview-no-17-newcastle" target="_blank" rel="noopener">Premier League 2026-27 preview No 17: Newcastle</a></h2>
+          <p class="summary">After the departure of the manager and some of their best players, fans on Tyneside are braced for a transitional season at best Guardian writers’ predicted position: 17th (NB: this is not necessarily Louise Taylor’s prediction but the average of our writers’…</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/20/premier-league-2026-27-preview-no-17-newcastle" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="c8d8fb69a858"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="manchester city target roma’s manu koné as spurs talk over savinho and marmoush deal france world cup midfielder could cost £50m tottenham discussing £150m double deal for forward pair manchester city have identified roma’s manu koné as a potential target to strengthen further enzo maresca’s options in midfield.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Transfer Window</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/19/manchester-city-target-romas-manu-kone-as-spurs-talk-over-savinho-and-marmoush-deal" target="_blank" rel="noopener">Manchester City target Roma’s Manu Koné as Spurs talk over Savinho and Marmoush deal</a></h2>
+          <p class="summary">France World Cup midfielder could cost £50m Tottenham discussing £150m double deal for forward pair Manchester City have identified Roma’s Manu Koné as a potential target to strengthen further Enzo Maresca’s options in midfield.</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/19/manchester-city-target-romas-manu-kone-as-spurs-talk-over-savinho-and-marmoush-deal" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="945b5afd9f77"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="curtis jones set to leave liverpool as inter submit £30m offer for midfielder homegrown star has been longstanding target for italians jones in the final year of his contract at anfield inter have submitted an offer of €30m rising to €35m (£30m) for curtis jones, with the liverpool midfielder expected to leave his boyhood club after a 1…">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Transfer Window</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/19/inter-liverpool-30m-curtis-jones-transfer-window-premier-league" target="_blank" rel="noopener">Curtis Jones set to leave Liverpool as Inter submit £30m offer for midfielder</a></h2>
+          <p class="summary">Homegrown star has been longstanding target for Italians Jones in the final year of his contract at Anfield Inter have submitted an offer of €30m rising to €35m (£30m) for Curtis Jones, with the Liverpool midfielder expected to leave his boyhood club after a 1…</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/19/inter-liverpool-30m-curtis-jones-transfer-window-premier-league" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="f912a79c8d3b"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="arsenal agree £51m deal to sign ezri konsa from aston villa defender to provide cover for injured saliba and timber villa braced for fresh bid from al-hilal for ollie watkins arsenal have agreed a £51m deal to sign ezri konsa from aston villa.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Transfer Window</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/19/aston-villa-al-hilal-ollie-watkins" target="_blank" rel="noopener">Arsenal agree £51m deal to sign Ezri Konsa from Aston Villa</a></h2>
+          <p class="summary">Defender to provide cover for injured Saliba and Timber Villa braced for fresh bid from Al-Hilal for Ollie Watkins Arsenal have agreed a £51m deal to sign Ezri Konsa from Aston Villa.</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/19/aston-villa-al-hilal-ollie-watkins" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="589cb93ca12e"
+                 data-sport="Football"
+                 data-league="Bundesliga"
+                 data-country="Germany"
+                 data-search="football daily | sensible soccer: are football clubs actually signing the players they need? sign up now! sign up now! sign up now? sign up now! in the 1941 rko radio pictures/mercury repertory theatre production citizen kane, orson welles essayed a man who began as a whirlwind of prolific energy, only to spectacularly fizzle out, to the extent that n…">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Bundesliga</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/19/sensible-soccer-clubs-signing-players-transfers-football-daily" target="_blank" rel="noopener">Football Daily | Sensible soccer: are football clubs actually signing the players they need?</a></h2>
+          <p class="summary">Sign up now! Sign up now! Sign up now? Sign up now! In the 1941 RKO Radio Pictures/Mercury repertory theatre production Citizen Kane, Orson Welles essayed a man who began as a whirlwind of prolific energy, only to spectacularly fizzle out, to the extent that n…</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/19/sensible-soccer-clubs-signing-players-transfers-football-daily" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="b2feca2b90cd"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="not just big in japan: zion suzuki has what it takes to follow emiliano martínez he is replacing a world cup winner and is his country’s first premier league keeper, but villa’s new signing has already dealt with harder challenges in november 2001, the first japanese goalkeeper to play english league football conceded a goal within the fir…">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Transfer Window</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/19/aston-villa-transfer-not-just-big-in-japan-zion-suzuki-has-what-it-takes-to-follow-emiliano-martinez" target="_blank" rel="noopener">Not just big in Japan: Zion Suzuki has what it takes to follow Emiliano Martínez</a></h2>
+          <p class="summary">He is replacing a World Cup winner and is his country’s first Premier League keeper, but Villa’s new signing has already dealt with harder challenges In November 2001, the first Japanese goalkeeper to play English league football conceded a goal within the fir…</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/19/aston-villa-transfer-not-just-big-in-japan-zion-suzuki-has-what-it-takes-to-follow-emiliano-martinez" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="74e133f267c0"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="‘he doubted’: mourinho says real madrid did not want rodri after hesitation over move mourinho: madrid made midfielder ‘a very good offer’ spain captain chose to join barcelona instead for £65.4m josé mourinho has confirmed real madrid made rodri an offer and that he spoke to him about joining the club, but claimed the player’s doubts about the…">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Transfer Window</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/19/jose-mourinho-real-madrid-rodri-barcelona-transfer-offer" target="_blank" rel="noopener">‘He doubted’: Mourinho says Real Madrid did not want Rodri after hesitation over move</a></h2>
+          <p class="summary">Mourinho: Madrid made midfielder ‘a very good offer’ Spain captain chose to join Barcelona instead for £65.4m José Mourinho has confirmed Real Madrid made Rodri an offer and that he spoke to him about joining the club, but claimed the player’s doubts about the…</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/19/jose-mourinho-real-madrid-rodri-barcelona-transfer-offer" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="a426d3567c3e"
+                 data-sport="Football"
+                 data-league="General"
+                 data-country=""
+                 data-search="transfer centre live! watkins, marmoush and baleba latest ">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill source">Sky Sports - Transfer Centre</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.skysports.com/football/live-blog/12691/12476234/transfer-centre-live-football-transfer-news-updates-and-rumours" target="_blank" rel="noopener">Transfer Centre LIVE! Watkins, Marmoush and Baleba latest</a></h2>
+          
+          <a class="readmore" href="https://www.skysports.com/football/live-blog/12691/12476234/transfer-centre-live-football-transfer-news-updates-and-rumours" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="75907fc9064b"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="manchester united make £65m offer for brighton’s carlos baleba bid short of brighton’s valuation for midfielder reijnders leaves manchester city for saudi arabia manchester united are confident of signing brighton’s carlos baleba for less than £75m, and the 22-year-old midfielder has agreed personal terms.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Transfer Window</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/19/manchester-united-brighton-carlos-baleba" target="_blank" rel="noopener">Manchester United make £65m offer for Brighton’s Carlos Baleba</a></h2>
+          <p class="summary">Bid short of Brighton’s valuation for midfielder Reijnders leaves Manchester City for Saudi Arabia Manchester United are confident of signing Brighton’s Carlos Baleba for less than £75m, and the 22-year-old midfielder has agreed personal terms.</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/19/manchester-united-brighton-carlos-baleba" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="ae63e39bfb3c"
+                 data-sport="Rugby"
+                 data-league="General"
+                 data-country=""
+                 data-search="cardiff sign leicester lock manz on loan cardiff strengthen pack ahead of 2026-27 season by signing leicester lock tom manz on loan.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport rugby">Rugby</span> <span class="pill source">BBC Sport - Rugby Union</span>
             <span class="date">Wed 19 Aug</span>
           </div>
           <h2><a href="https://www.bbc.co.uk/sport/rugby-union/articles/c3ekl5w5z9wo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Cardiff sign Leicester lock Manz on loan</a></h2>
@@ -368,10 +1804,29 @@
           <a class="readmore" href="https://www.bbc.co.uk/sport/rugby-union/articles/c3ekl5w5z9wo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
         </article>
 
-        <article class="card">
+        <article class="card" data-id="8bfd38710db4"
+                 data-sport="Football"
+                 data-league="International"
+                 data-country="International"
+                 data-search="wafcon 2026 review: glory for cameroon, nigeria flop and malawi cause a stir monique ngock starred as cameroon triumphed for the first time in a tournament of compelling surprises, even if crowd figures disappointed cameroon became only the fourth country to lift the women’s africa cup of nations (wafcon) title following nigeria, equat…">
+          <span class="new-badge" hidden>NEW</span>
           <div class="meta">
-            <span class="pill league">New Zealand</span>
-            <span class="pill source">BBC Sport – Rugby Union</span>
+            <span class="pill sport football">Football</span> <span class="pill league">International</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/sport/2026/aug/19/wafcon-2026-review-glory-for-cameroon-nigeria-flop-and-malawi-cause-a-stir" target="_blank" rel="noopener">Wafcon 2026 review: Glory for Cameroon, Nigeria flop and Malawi cause a stir</a></h2>
+          <p class="summary">Monique Ngock starred as Cameroon triumphed for the first time in a tournament of compelling surprises, even if crowd figures disappointed Cameroon became only the fourth country to lift the Women’s Africa Cup of Nations (Wafcon) title following Nigeria, Equat…</p>
+          <a class="readmore" href="https://www.theguardian.com/sport/2026/aug/19/wafcon-2026-review-glory-for-cameroon-nigeria-flop-and-malawi-cause-a-stir" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="074c511828e8"
+                 data-sport="Rugby"
+                 data-league="New Zealand"
+                 data-country="New Zealand"
+                 data-search="new zealand great tui joins trailfinders world cup-winning new zealand international ruby tui, 34, signs a one-year deal with trailfinders women.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport rugby">Rugby</span> <span class="pill league">New Zealand</span> <span class="pill source">BBC Sport - Rugby Union</span>
             <span class="date">Wed 19 Aug</span>
           </div>
           <h2><a href="https://www.bbc.co.uk/sport/rugby-union/articles/cd69dj304wxo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">New Zealand great Tui joins Trailfinders</a></h2>
@@ -379,97 +1834,249 @@
           <a class="readmore" href="https://www.bbc.co.uk/sport/rugby-union/articles/cd69dj304wxo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
         </article>
 
-        <article class="card">
+        <article class="card" data-id="4ed7cebc75cf"
+                 data-sport="Football"
+                 data-league="Bundesliga"
+                 data-country="Germany"
+                 data-search="football transfer rumours: al-hilal eye moves for harry kane and ollie watkins? today’s gossip is still on the beach it seems the possibility of winning the ballon d’or is not the only thing the england captain, harry kane , has been talking about recently. well, his representatives at least.">
+          <span class="new-badge" hidden>NEW</span>
           <div class="meta">
-            <span class="pill league">Wales</span>
-            <span class="pill source">BBC Sport – Welsh Rugby</span>
+            <span class="pill sport football">Football</span> <span class="pill league">Bundesliga</span> <span class="pill source">The Guardian - Transfer Window</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/19/football-transfer-rumours-al-hilal-eye-moves-for-harry-kane-and-ollie-watkins" target="_blank" rel="noopener">Football transfer rumours: Al-Hilal eye moves for Harry Kane and Ollie Watkins?</a></h2>
+          <p class="summary">Today’s gossip is still on the beach It seems the possibility of winning the Ballon d’Or is not the only thing the England captain, Harry Kane , has been talking about recently. Well, his representatives at least.</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/19/football-transfer-rumours-al-hilal-eye-moves-for-harry-kane-and-ollie-watkins" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="4c31c63d71e1"
+                 data-sport="Football"
+                 data-league="General"
+                 data-country=""
+                 data-search="northern ireland keeper burns on plans for life after football northern ireland goalkeeper jackie burns is the number one for her country and has just signed for burnley - but she is already thinking about her next steps.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill source">BBC Sport - Football</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.bbc.co.uk/sport/football/articles/c4gvj23rexvo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Northern Ireland keeper Burns on plans for life after football</a></h2>
+          <p class="summary">Northern Ireland goalkeeper Jackie Burns is the number one for her country and has just signed for Burnley - but she is already thinking about her next steps.</p>
+          <a class="readmore" href="https://www.bbc.co.uk/sport/football/articles/c4gvj23rexvo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="10452cea6086"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="‘this isn’t normal in football’: xisco, malaysia and the new invincibles royal family-backed johor darul ta’zim are on the verge of a world-record 109 league games unbeaten and their former watford manager is aiming higher many watford fans felt xisco muñoz was dismissed too soon after leading them into the premier league as champi…">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/19/xisco-malaysia-new-invincibles-football-johor-darul-tazim" target="_blank" rel="noopener">‘This isn’t normal in football’: Xisco, Malaysia and the new Invincibles</a></h2>
+          <p class="summary">Royal family-backed Johor Darul Ta’zim are on the verge of a world-record 109 league games unbeaten and their former Watford manager is aiming higher Many Watford fans felt Xisco Muñoz was dismissed too soon after leading them into the Premier League as Champi…</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/19/xisco-malaysia-new-invincibles-football-johor-darul-tazim" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="5b96cd277857"
+                 data-sport="Football"
+                 data-league="General"
+                 data-country=""
+                 data-search="march, may and more: footballers scoring in months that match their names | the knowledge plus: goalkeepers sent off far from their penalty area, and the fastest spot-kicks ever awarded mail us with your all of your questions and answers “birmingham’s august priske scored the only goal at swansea in the league cup on 8 august.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Wed 19 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/19/march-may-and-more-footballers-scoring-in-months-that-match-their-names" target="_blank" rel="noopener">March, May and more: footballers scoring in months that match their names | The Knowledge</a></h2>
+          <p class="summary">Plus: goalkeepers sent off far from their penalty area, and the fastest spot-kicks ever awarded Mail us with your all of your questions and answers “Birmingham’s August Priske scored the only goal at Swansea in the League Cup on 8 August.</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/19/march-may-and-more-footballers-scoring-in-months-that-match-their-names" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="ee3d3b32fb50"
+                 data-sport="Football"
+                 data-league="La Liga"
+                 data-country="Spain"
+                 data-search="barcelona steal rodri away from real madrid and plan to make him new busquets spain’s world cup-winning captain has completed his move to camp nou where he is a natural successor to club legend by the time flight ptn27b started its descent into el prat a bit before 8pm on monday evening, a small crowd had gathered by the terminal doors,…">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">La Liga</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Tue 18 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/18/barcelona-snatch-rodri-from-madrid-and-make-him-new-busquets" target="_blank" rel="noopener">Barcelona steal Rodri away from Real Madrid and plan to make him new Busquets</a></h2>
+          <p class="summary">Spain’s World Cup-winning captain has completed his move to Camp Nou where he is a natural successor to club legend By the time Flight PTN27B started its descent into El Prat a bit before 8pm on Monday evening, a small crowd had gathered by the terminal doors,…</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/18/barcelona-snatch-rodri-from-madrid-and-make-him-new-busquets" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="6ad9a443b6a0"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="pep’s final act of passion: amazon’s revealing guardiola series pulls no punches from the manager’s divorce to tension with the club hierarchy, new documentary is an honest portrayal of his difficult last two seasons having occupied a front-row seat for the final two seasons of pep guardiola’s gilded manchester city tenure, the subject of…">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Tue 18 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/2026/aug/18/peps-final-act-of-passion-amazons-revealing-guardiola-series-pulls-no-punches" target="_blank" rel="noopener">Pep’s final act of passion: Amazon’s revealing Guardiola series pulls no punches</a></h2>
+          <p class="summary">From the manager’s divorce to tension with the club hierarchy, new documentary is an honest portrayal of his difficult last two seasons Having occupied a front-row seat for the final two seasons of Pep Guardiola’s gilded Manchester City tenure, the subject of…</p>
+          <a class="readmore" href="https://www.theguardian.com/football/2026/aug/18/peps-final-act-of-passion-amazons-revealing-guardiola-series-pulls-no-punches" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="1ba71afd666f"
+                 data-sport="Football"
+                 data-league="Premier League"
+                 data-country="England"
+                 data-search="david squires on … new managers causing a stir before premier league’s return our cartoonist on the nine fresh faces in club dugouts and their potential impact as they begin work buy this cartoon | some of david’s favourite works and his latest book, chaos in the box: get it now continue reading...">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport football">Football</span> <span class="pill league">Premier League</span> <span class="pill source">The Guardian - Football</span>
+            <span class="date">Tue 18 Aug</span>
+          </div>
+          <h2><a href="https://www.theguardian.com/football/picture/2026/aug/18/david-squires-new-managers-causing-stir-premier-league-return" target="_blank" rel="noopener">David Squires on … new managers causing a stir before Premier League’s return</a></h2>
+          <p class="summary">Our cartoonist on the nine fresh faces in club dugouts and their potential impact as they begin work Buy this cartoon | Some of David’s favourite works And his latest book, Chaos in the Box: get it now Continue reading...</p>
+          <a class="readmore" href="https://www.theguardian.com/football/picture/2026/aug/18/david-squires-new-managers-causing-stir-premier-league-return" target="_blank" rel="noopener">Read full story &rarr;</a>
+        </article>
+
+        <article class="card" data-id="95e697ea493e"
+                 data-sport="Rugby"
+                 data-league="Premiership"
+                 data-country="England"
+                 data-search="neumann uncertain over future after quins exit wales wing lisa neumann says she is considering her options after leaving harlequins this summer.">
+          <span class="new-badge" hidden>NEW</span>
+          <div class="meta">
+            <span class="pill sport rugby">Rugby</span> <span class="pill league">Premiership</span> <span class="pill source">BBC Sport - Rugby Union</span>
             <span class="date">Tue 18 Aug</span>
           </div>
           <h2><a href="https://www.bbc.co.uk/sport/rugby-union/articles/c20eygrlklzo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Neumann uncertain over future after Quins exit</a></h2>
           <p class="summary">Wales wing Lisa Neumann says she is considering her options after leaving Harlequins this summer.</p>
           <a class="readmore" href="https://www.bbc.co.uk/sport/rugby-union/articles/c20eygrlklzo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
         </article>
-
-        <article class="card">
-          <div class="meta">
-            <span class="pill league">South Africa</span>
-            <span class="pill source">BBC Sport – Rugby Union</span>
-            <span class="date">Mon 17 Aug</span>
-          </div>
-          <h2><a href="https://www.bbc.co.uk/sport/rugby-union/articles/c2dkz3k94dlo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Is All Blacks&#x27; tour of South Africa a new chapter for rugby union?</a></h2>
-          <p class="summary">Is New Zealand&#x27;s &#x27;Greatest Rivalry&#x27; tour of world champions South Africa a signpost to the future of rugby union?</p>
-          <a class="readmore" href="https://www.bbc.co.uk/sport/rugby-union/articles/c2dkz3k94dlo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
-        </article>
-
-        <article class="card">
-          <div class="meta">
-            <span class="pill league">Wales</span>
-            <span class="pill source">BBC Sport – Welsh Rugby</span>
-            <span class="date">Mon 17 Aug</span>
-          </div>
-          <h2><a href="https://www.bbc.co.uk/sport/rugby-union/articles/clylqd034n9o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Wales centre James signs new Scarlets contract</a></h2>
-          <p class="summary">Wales centre Eddie James signs a new contract with Scarlets before the start of the 2026-27 season.</p>
-          <a class="readmore" href="https://www.bbc.co.uk/sport/rugby-union/articles/clylqd034n9o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
-        </article>
-
-        <article class="card">
-          <div class="meta">
-            <span class="pill league">Australia</span>
-            <span class="pill source">SMH – Rugby Union</span>
-            <span class="date">Sun 16 Aug</span>
-          </div>
-          <h2><a href="https://www.smh.com.au/sport/rugby-union/kiss-fingerprints-quickly-appearing-on-new-look-wallabies-20260816-p60ooz.html?ref=rss&amp;utm_medium=rss&amp;utm_source=rss_sport_rugby-union" target="_blank" rel="noopener">Kiss’ fingerprints quickly appearing on new-look Wallabies</a></h2>
-          <p class="summary">Clever interplay between midfield players and some aggressive forwards are a good sign for the challenges to come in Argentina.</p>
-          <a class="readmore" href="https://www.smh.com.au/sport/rugby-union/kiss-fingerprints-quickly-appearing-on-new-look-wallabies-20260816-p60ooz.html?ref=rss&amp;utm_medium=rss&amp;utm_source=rss_sport_rugby-union" target="_blank" rel="noopener">Read full story &rarr;</a>
-        </article>
-
-        <article class="card">
-          <div class="meta">
-            <span class="pill league">Japan</span>
-            <span class="pill source">The Guardian – Rugby Union</span>
-            <span class="date">Sat 15 Aug</span>
-          </div>
-          <h2><a href="https://www.theguardian.com/sport/2026/aug/15/les-kiss-australia-team-selection-rugby-union" target="_blank" rel="noopener">Les Kiss reaps rewards of derring-do approach to Australia’s team selection</a></h2>
-          <p class="summary">Issac Henry, Carlo Tizzano, Charlie Cale and Massimo de Lutiis repay faith shown by Wallabies coach and highlight squad’s strength in depth The Wallabies have problems, but they are of the good variety.</p>
-          <a class="readmore" href="https://www.theguardian.com/sport/2026/aug/15/les-kiss-australia-team-selection-rugby-union" target="_blank" rel="noopener">Read full story &rarr;</a>
-        </article>
-
-        <article class="card">
-          <div class="meta">
-            <span class="pill league">Wales</span>
-            <span class="pill source">BBC Sport – Rugby Union</span>
-            <span class="date">Sat 15 Aug</span>
-          </div>
-          <h2><a href="https://www.bbc.co.uk/sport/rugby-union/articles/cwy44131ydno?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Wales great Jones set to join Ospreys board</a></h2>
-          <p class="summary">Ospreys are set to announce former Wales captain Alun Wyn Jones as a new member of their board before the 2026-27 season.</p>
-          <a class="readmore" href="https://www.bbc.co.uk/sport/rugby-union/articles/cwy44131ydno?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Read full story &rarr;</a>
-        </article>
-
-        <article class="card">
-          <div class="meta">
-            <span class="pill league">Japan</span>
-            <span class="pill source">The Guardian – Rugby Union</span>
-            <span class="date">Sat 15 Aug</span>
-          </div>
-          <h2><a href="https://www.theguardian.com/sport/2026/aug/15/wallabies-australia-japan-nations-championship-rugby-union-match-report" target="_blank" rel="noopener">Carter Gordon impresses on return as Wallabies surge clear of Japan for dominant win</a></h2>
-          <p class="summary">Australia beat Japan 56-17 in Townsville No 10 shows why he could be solution Les is proving more for the Wallabies, with new coach Les Kiss leading the side to a second consecutive victory in an eight-try 56-17 triumph over Japan in Townsville.</p>
-          <a class="readmore" href="https://www.theguardian.com/sport/2026/aug/15/wallabies-australia-japan-nations-championship-rugby-union-match-report" target="_blank" rel="noopener">Read full story &rarr;</a>
-        </article>
-
-        <article class="card">
-          <div class="meta">
-            
-            <span class="pill source">SMH – Rugby Union</span>
-            <span class="date">Sat 15 Aug</span>
-          </div>
-          <h2><a href="https://www.smh.com.au/sport/rugby-union/wallaby-1000-scores-try-on-debut-20260815-p60on0.html?ref=rss&amp;utm_medium=rss&amp;utm_source=rss_sport_rugby-union" target="_blank" rel="noopener">Wallaby 1000 scores try on debut</a></h2>
-          <p class="summary">Wallaby No.1000 Massimo De Lutiis goes over as the home team extend their lead.</p>
-          <a class="readmore" href="https://www.smh.com.au/sport/rugby-union/wallaby-1000-scores-try-on-debut-20260815-p60on0.html?ref=rss&amp;utm_medium=rss&amp;utm_source=rss_sport_rugby-union" target="_blank" rel="noopener">Read full story &rarr;</a>
-        </article>
+    </div>
+    <p class="empty" id="no-results" hidden>Nothing matches. Try clearing the search or choosing All.</p>
   </main>
+
   <footer>
-    <p>Scrum Wire pulls public RSS feeds and shows the headline, a short trimmed summary, and a link to the full article at the original source. Copyright of each story stays with its publisher. Rebuilt automatically every morning.</p>
-    <p>&copy; 2026 Scrum Wire &middot; a personal, non-commercial news reader.</p>
+    <p>The Transfer Wire pulls public RSS feeds and shows the headline, a short trimmed summary, and a link to the full article at the original source. Copyright of each story stays with its publisher. Rebuilt automatically every morning.</p>
+    <p>&copy; 2026 The Transfer Wire &middot; a personal, non-commercial news reader.</p>
   </footer>
+
+  <script id="filter-data" type="application/json">{"leaguesBySport": {"Rugby": ["Premiership", "Wales", "South Africa", "New Zealand", "General"], "Football": ["Premier League", "La Liga", "Serie A", "Bundesliga", "International", "General"]}, "countriesByLeague": {"General": [], "South Africa": ["South Africa"], "Premier League": ["England"], "New Zealand": ["New Zealand"], "Wales": ["Wales"], "La Liga": ["Spain"], "Premiership": ["England"], "International": ["International"], "Serie A": ["Italy"], "Bundesliga": ["Germany"]}}</script>
+  <script>
+    (function () {
+      var DATA = JSON.parse(document.getElementById('filter-data').textContent);
+      var cards = Array.prototype.slice.call(document.querySelectorAll('.card'));
+      var countEl = document.getElementById('count');
+      var noResults = document.getElementById('no-results');
+      var searchEl = document.getElementById('search');
+      var sportSel = document.getElementById('sport-select');
+      var countrySel = document.getElementById('country-select');
+      var leaguesBox = document.getElementById('leagues');
+
+      var state = { sport:'all', league:'all', country:'all', query:'' };
+
+      // ---------- NEW badge: compare against ids seen on last visit ----------
+      var SEEN_KEY = 'ttw-seen-ids';
+      var seen = {};
+      try { seen = JSON.parse(localStorage.getItem(SEEN_KEY) || '{}'); } catch (e) { seen = {}; }
+      var currentIds = [];
+      cards.forEach(function (card) {
+        var id = card.getAttribute('data-id');
+        currentIds.push(id);
+        if (!seen[id]) { card.querySelector('.new-badge').hidden = false; }
+      });
+      var nextSeen = {};
+      currentIds.forEach(function (id) { nextSeen[id] = Date.now(); });
+      try { localStorage.setItem(SEEN_KEY, JSON.stringify(nextSeen)); } catch (e) {}
+
+      function rebuildLeagues() {
+        var out = '<button class="filter-btn active" data-filter="all">All leagues</button>';
+        var list = [];
+        if (state.sport === 'all') {
+          Object.keys(DATA.leaguesBySport).forEach(function (s) {
+            DATA.leaguesBySport[s].forEach(function (lg) {
+              if (list.indexOf(lg) === -1) list.push(lg);
+            });
+          });
+        } else {
+          list = (DATA.leaguesBySport[state.sport] || []).slice();
+        }
+        list.forEach(function (lg) {
+          if (lg === 'General') return;
+          out += '<button class="filter-btn" data-filter="' + lg + '">' + lg + '</button>';
+        });
+        leaguesBox.innerHTML = out;
+        state.league = 'all';
+        bindLeagueButtons();
+      }
+
+      function bindLeagueButtons() {
+        leaguesBox.querySelectorAll('.filter-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            leaguesBox.querySelectorAll('.filter-btn').forEach(function (b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+            state.league = btn.getAttribute('data-filter');
+            apply();
+          });
+        });
+      }
+
+      function rebuildCountries() {
+        var set = [];
+        cards.forEach(function (card) {
+          if (state.sport !== 'all' && card.getAttribute('data-sport') !== state.sport) return;
+          var c = card.getAttribute('data-country');
+          if (c && set.indexOf(c) === -1) set.push(c);
+        });
+        set.sort();
+        var out = '<option value="all">All countries</option>';
+        set.forEach(function (c) { out += '<option value="' + c + '">' + c + '</option>'; });
+        countrySel.innerHTML = out;
+        state.country = 'all';
+      }
+
+      function apply() {
+        var shown = 0;
+        cards.forEach(function (card) {
+          var ok = true;
+          if (state.sport !== 'all' && card.getAttribute('data-sport') !== state.sport) ok = false;
+          if (ok && state.league !== 'all' && card.getAttribute('data-league') !== state.league) ok = false;
+          if (ok && state.country !== 'all' && card.getAttribute('data-country') !== state.country) ok = false;
+          if (ok && state.query && card.getAttribute('data-search').indexOf(state.query) === -1) ok = false;
+          card.hidden = !ok;
+          if (ok) shown++;
+        });
+        countEl.textContent = shown + (shown === 1 ? ' story' : ' stories');
+        noResults.hidden = shown !== 0;
+      }
+
+      sportSel.addEventListener('change', function () {
+        state.sport = sportSel.value;
+        rebuildLeagues();
+        rebuildCountries();
+        apply();
+      });
+      countrySel.addEventListener('change', function () {
+        state.country = countrySel.value;
+        apply();
+      });
+      searchEl.addEventListener('input', function () {
+        state.query = searchEl.value.trim().toLowerCase();
+        apply();
+      });
+
+      bindLeagueButtons();
+      rebuildCountries();
+
+      var STEPS = [16, 18, 20, 23, 26];
+      var idx = 1;
+      try { var sv = parseInt(localStorage.getItem('ttw-textsize'),10); if(!isNaN(sv)&&sv>=0&&sv<STEPS.length) idx=sv; } catch(e){}
+      function applySize() { document.body.style.fontSize = STEPS[idx]+'px'; try{localStorage.setItem('ttw-textsize',idx);}catch(e){} }
+      document.getElementById('text-bigger').addEventListener('click', function(){ if(idx<STEPS.length-1){idx++;applySize();} });
+      document.getElementById('text-smaller').addEventListener('click', function(){ if(idx>0){idx--;applySize();} });
+      applySize();
+    })();
+  </script>
 </body>
 </html>
