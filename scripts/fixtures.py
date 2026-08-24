@@ -13,13 +13,19 @@ yesterday's matches are finished and their scores are final.
 DATA SOURCE NOTE
 ----------------
 Fixtures/results are NOT in the transfer RSS feeds, so this page needs a sports
-data source: football-data.org (free tier, needs a free API token -> repo
-secret FOOTBALL_DATA_TOKEN). Rugby fixture APIs on a free tier are patchy --
-left for a follow-up (structure below already supports adding rugby matches).
+data source:
+  * Football -- football-data.org (free tier, needs a free API token -> repo
+    secret FOOTBALL_DATA_TOKEN).
+  * Rugby -- ESPN's public scoreboard API (site.api.espn.com). No signup or
+    key needed. This is an UNOFFICIAL/undocumented endpoint used widely by
+    hobby projects, not a published ESPN product -- it could change or be
+    withdrawn without notice. If it ever breaks, the rugby section just goes
+    quiet (RUGBY_COMPETITIONS below can be swapped for a documented API if
+    one appears).
 
-This script DEGRADES GRACEFULLY: if no token/data is available it still
-writes a valid page explaining that fixtures will appear once a data source
-is connected, so it never breaks the daily build.
+This script DEGRADES GRACEFULLY: if a source has no data (off-season, no
+token, endpoint down) it still writes a valid page, so it never breaks the
+daily build.
 """
 
 import html
@@ -53,11 +59,25 @@ FOOTBALL_COMPETITIONS = {
 
 FOOTBALL_DATA_TOKEN = os.environ.get("FOOTBALL_DATA_TOKEN", "").strip()
 
+# label : ESPN numeric league ID (verified live via
+# sports.core.api.espn.com/v2/sports/rugby/leagues before adding)
+RUGBY_COMPETITIONS = {
+    "Gallagher Premiership": "267979",
+    "United Rugby Championship": "270557",
+    "Top 14": "270559",
+    "Six Nations": "180659",
+}
 
-def _get_json(url, headers):
-    req = urllib.request.Request(url, headers=headers)
+
+def _get_json(url, headers=None):
+    req = urllib.request.Request(url, headers=headers or {}, )
+    req.add_header("Accept-Encoding", "gzip")
     with urllib.request.urlopen(req, timeout=20) as resp:
-        return json.loads(resp.read().decode("utf-8"))
+        raw = resp.read()
+        if resp.info().get("Content-Encoding") == "gzip":
+            import gzip
+            raw = gzip.decompress(raw)
+        return json.loads(raw.decode("utf-8"))
 
 
 def fetch_football(day: datetime):
@@ -94,6 +114,44 @@ def fetch_football(day: datetime):
                 "away_score": as_,
                 "kickoff": ko,
                 "status": m.get("status", ""),
+            })
+    return out
+
+
+def fetch_rugby(day: datetime):
+    """Return list of match dicts for a given UTC date, or [] if unavailable."""
+    date_str = day.strftime("%Y%m%d")
+    out = []
+    for label, league_id in RUGBY_COMPETITIONS.items():
+        url = (f"https://site.api.espn.com/apis/site/v2/sports/rugby/"
+               f"{league_id}/scoreboard?dates={date_str}")
+        try:
+            data = _get_json(url)
+        except Exception as exc:  # noqa: BLE001
+            print(f"  ! ESPN rugby {label} {date_str}: {exc}", file=sys.stderr)
+            continue
+        for e in data.get("events", []):
+            comp = (e.get("competitions") or [{}])[0]
+            competitors = comp.get("competitors", [])
+            home = next((c for c in competitors if c.get("homeAway") == "home"), {})
+            away = next((c for c in competitors if c.get("homeAway") == "away"), {})
+            status = comp.get("status", {}).get("type", {}).get("name", "")
+            hs = home.get("score") if status == "STATUS_FINAL" else None
+            as_ = away.get("score") if status == "STATUS_FINAL" else None
+            kickoff = e.get("date", "")
+            try:
+                ko = datetime.fromisoformat(kickoff.replace("Z", "+00:00")).strftime("%H:%M")
+            except Exception:
+                ko = ""
+            out.append({
+                "sport": "Rugby",
+                "league": label,
+                "home": home.get("team", {}).get("displayName", "?"),
+                "away": away.get("team", {}).get("displayName", "?"),
+                "home_score": hs,
+                "away_score": as_,
+                "kickoff": ko,
+                "status": status,
             })
     return out
 
@@ -276,22 +334,22 @@ def main():
     now = datetime.now(timezone.utc)
     yesterday = now - timedelta(days=1)
 
-    note = ""
     today_matches, yday_matches = [], []
+
+    print("Fetching rugby fixtures/results...")
+    today_matches += fetch_rugby(now)
+    yday_matches += fetch_rugby(yesterday)
 
     if FOOTBALL_DATA_TOKEN:
         print("Fetching football fixtures/results...")
         today_matches += fetch_football(now)
         yday_matches += fetch_football(yesterday)
+        note = ""
     else:
-        note = ("Fixtures & results will appear here once a data source is "
-                "connected. A free football-data.org token needs adding as "
-                "the FOOTBALL_DATA_TOKEN repo secret (and a rugby source is "
-                "still to be wired in). The page and daily build work fine "
-                "in the meantime.")
-
-    # Rugby fixtures: no reliable free API wired yet.
-    # (Structure supports it: append dicts with sport='Rugby'.)
+        note = ("Football fixtures & results need a free football-data.org "
+                "token adding as the FOOTBALL_DATA_TOKEN repo secret. Rugby "
+                "doesn't need one, so rugby fixtures already show below "
+                "when there are any scheduled.")
 
     page = render(today_matches, yday_matches, note)
     with open("fixtures.html", "w", encoding="utf-8") as fh:
